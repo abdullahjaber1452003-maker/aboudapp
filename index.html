@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>تطبيق عبد الله</title>
+    <!-- مكتبات فايربيز لقاعدة البيانات -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
     <style>
         :root {
             --bg-main: #0d0d0d; --bg-card: #1a1a1a; --neon-green: #9fff24;
@@ -50,10 +54,10 @@
         .nav-item.active { color: var(--neon-green); }
         .nav-icon { font-size: 20px; }
 
-        /* ستايل قسم الشات الجديد */
+        /* الشات */
         .chat-container { display: flex; flex-direction: column; height: 75vh; padding: 0 10px;}
         .chat-box { flex: 1; background: var(--bg-card); border-radius: 15px; border: 1px solid var(--border-color); padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px;}
-        .message { max-width: 75%; padding: 12px 15px; border-radius: 20px; font-size: 14px; line-height: 1.4;}
+        .message { max-width: 75%; padding: 12px 15px; border-radius: 20px; font-size: 14px; line-height: 1.4; word-wrap: break-word;}
         .message.sent { background: var(--neon-green); color: #000; align-self: flex-start; border-top-right-radius: 5px;}
         .message.received { background: #333; color: white; align-self: flex-end; border-top-left-radius: 5px;}
         .msg-info { font-size: 10px; opacity: 0.6; margin-bottom: 5px; display: block; }
@@ -128,22 +132,18 @@
             </div>
         </div>
 
-        <!-- قسم الشات (تجريبي) -->
         <div id="chatSection" style="display: none;">
             <div class="section-header">المحادثة 💬</div>
             <div class="chat-container">
-                <div class="notice-msg">⚠️ هذه واجهة تجريبية. لربطها بالإنترنت نحتاج لربطها بقاعدة بيانات لاحقاً.</div>
+                <div class="notice-msg">أنت الآن متصل بغرفة الدردشة العامة 🟢</div>
                 
                 <div class="chat-box" id="chatMessages">
-                    <div class="message received">
-                        <span class="msg-info">النظام - 10:00 ص</span>
-                        أهلاً بك في غرفة الدردشة يا عبد الله! جرب إرسال رسالة الآن للتعرف على التصميم.
-                    </div>
+                    <!-- ستظهر الرسائل هنا -->
                 </div>
                 
                 <div class="chat-input-area">
-                    <input type="text" id="chatInput" placeholder="اكتب رسالتك هنا...">
-                    <button class="btn-primary" onclick="sendMockMessage()">➤</button>
+                    <input type="text" id="chatInput" placeholder="اكتب رسالتك هنا..." onkeypress="if(event.key === 'Enter') sendRealMessage()">
+                    <button class="btn-primary" onclick="sendRealMessage()">➤</button>
                 </div>
             </div>
         </div>
@@ -230,10 +230,19 @@
         </nav>
     </div>
 
-    <audio id="alarmSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" loop preload="auto"></audio>
-    <audio id="adhanAudio" src="" preload="auto"></audio>
-
     <script>
+        // =========================================================
+        // ⚠️ ضع مفاتيح فايربيز الخاصة بك هنا ⚠️
+        // =========================================================
+        const firebaseConfig = {
+            // امسح هيدا السطر والصق الكود تبعك اللي بيبدأ بكلمة apiKey
+        };
+        // =========================================================
+        
+        // تشغيل فايربيز
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
         window.onload = function() {
             let savedName = localStorage.getItem("appUserName");
             let savedHandle = localStorage.getItem("appUserHandle");
@@ -242,6 +251,7 @@
             if (savedHandle) document.getElementById("userHandleInput").value = savedHandle;
             if (savedPic) document.getElementById("userProfileImage").src = savedPic;
             getWeather(); 
+            listenForMessages(); // تشغيل استقبال الرسائل
         };
 
         function saveProfile() {
@@ -261,26 +271,45 @@
             }
         });
 
-        // --- نظام إرسال الرسائل (واجهة فقط حالياً) ---
-        function sendMockMessage() {
+        // --- نظام إرسال الرسائل الحقيقي ---
+        function sendRealMessage() {
             let inputField = document.getElementById("chatInput");
             let msgText = inputField.value.trim();
             if(msgText === "") return;
             
-            let myName = document.getElementById("userNameInput").value || "أنا";
-            let chatBox = document.getElementById("chatMessages");
-            
-            let newMsg = document.createElement("div");
-            newMsg.className = "message sent";
-            
+            let myName = document.getElementById("userNameInput").value || "مستخدم";
             let timeNow = new Date();
             let timeStr = timeNow.getHours() + ":" + (timeNow.getMinutes()<10?'0':'') + timeNow.getMinutes();
             
-            newMsg.innerHTML = `<span class="msg-info">${myName} - ${timeStr}</span>${msgText}`;
-            chatBox.appendChild(newMsg);
+            // إرسال الرسالة لقاعدة البيانات
+            db.ref("chat_messages").push({
+                name: myName,
+                text: msgText,
+                time: timeStr
+            });
             
             inputField.value = "";
-            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // --- نظام استقبال الرسائل الحقيقي ---
+        function listenForMessages() {
+            db.ref("chat_messages").on("child_added", function(snapshot) {
+                let msg = snapshot.val();
+                let myName = document.getElementById("userNameInput").value || "مستخدم";
+                let chatBox = document.getElementById("chatMessages");
+                
+                let newMsg = document.createElement("div");
+                // تحديد إذا كانت الرسالة مني أو من شخص آخر
+                if (msg.name === myName) {
+                    newMsg.className = "message sent";
+                } else {
+                    newMsg.className = "message received";
+                }
+                
+                newMsg.innerHTML = `<span class="msg-info">${msg.name} - ${msg.time}</span>${msg.text}`;
+                chatBox.appendChild(newMsg);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            });
         }
 
         // --- باقي الأنظمة كما هي ---
