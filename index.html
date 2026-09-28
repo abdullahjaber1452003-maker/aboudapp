@@ -153,9 +153,10 @@
                 </div>
             </div>
 
+            <!-- بطاقة المطور مع التعديل الجديد -->
             <div class="developer-card">
                 <h4>تصميم وتطوير</h4>
-                <h3>إبراهيم - Rinawi Tech</h3>
+                <h3>عبد الله</h3>
             </div>
         </div>
 
@@ -302,17 +303,14 @@
             }
         });
 
-        // --- نظام الطقس المعدل لتفادي التعليق ---
         function getWeather() {
-            // 1. تحميل طقس طرابلس فوراً حتى لا تبقى الشاشة فارغة
             fetchWeatherByCity("طرابلس");
 
-            // 2. محاولة جلب الموقع الحالي بمهلة زمنية قصيرة (5 ثواني كحد أقصى)
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => fetchWeatherData(position.coords.latitude, position.coords.longitude),
                     (error) => console.log("تم الاعتماد على الموقع الافتراضي"),
-                    { timeout: 5000 } // هذه تمنع التعليق المستمر
+                    { timeout: 5000 }
                 );
             }
         }
@@ -325,7 +323,6 @@
         }
 
         function fetchWeatherByCity(cityName) {
-            // إحداثيات طرابلس، لبنان
             const lat = 34.4367;
             const lon = 35.8362;
             fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&hourly=relativehumidity_2m,apparent_temperature,windspeed_10m`)
