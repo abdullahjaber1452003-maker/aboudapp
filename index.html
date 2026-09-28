@@ -6,71 +6,38 @@
     <title>تطبيق عبد الله</title>
     <style>
         :root {
-            --bg-main: #0d0d0d;
-            --bg-card: #1a1a1a;
-            --neon-green: #9fff24;
-            --text-light: #ffffff;
-            --text-dim: #888888;
-            --border-color: #2a2a2a;
+            --bg-main: #0d0d0d; --bg-card: #1a1a1a; --neon-green: #9fff24;
+            --text-light: #ffffff; --text-dim: #888888; --border-color: #2a2a2a;
         }
 
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; 
-            background-color: var(--bg-main); 
-            color: var(--text-light); 
-            margin: 0; 
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .app-container { 
-            max-width: 450px; 
-            margin: 0 auto; 
-            min-height: 100vh;
-            background: var(--bg-main);
-            padding-bottom: 90px; 
-            position: relative;
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background-color: var(--bg-main); color: var(--text-light); margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        .app-container { max-width: 450px; margin: 0 auto; min-height: 100vh; background: var(--bg-main); padding-bottom: 90px; position: relative; }
 
         .header-top { display: flex; justify-content: space-between; padding: 20px; color: var(--text-dim); }
-
         .profile-section { text-align: center; padding: 10px 20px; }
-        .profile-pic-wrapper {
-            position: relative; width: 100px; height: 100px; margin: 0 auto 15px; border-radius: 50%;
-            border: 2px dashed var(--text-dim); padding: 5px; cursor: pointer;
-        }
+        .profile-pic-wrapper { position: relative; width: 100px; height: 100px; margin: 0 auto 15px; border-radius: 50%; border: 2px dashed var(--text-dim); padding: 5px; cursor: pointer; }
         .profile-pic { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background-color: var(--bg-card); }
         .profile-name { background: transparent; border: none; color: var(--text-light); font-size: 24px; font-weight: bold; text-align: center; width: 100%; outline: none; }
         .profile-handle { background: transparent; border: none; color: var(--text-dim); font-size: 14px; text-align: center; width: 100%; outline: none; margin-top: 5px; }
 
         .card-container { padding: 0 20px; display: flex; flex-direction: column; gap: 15px; }
-        .custom-card {
-            background: var(--bg-card); border-radius: 20px; padding: 20px; display: flex; align-items: center; gap: 15px; position: relative; overflow: hidden; cursor: pointer;
-        }
+        .custom-card { background: var(--bg-card); border-radius: 20px; padding: 20px; display: flex; align-items: center; gap: 15px; position: relative; overflow: hidden; cursor: pointer; border: 1px solid var(--border-color);}
         .custom-card.green-tint { border: 1px solid rgba(159, 255, 36, 0.2); }
         .card-icon { width: 50px; height: 50px; background: rgba(159, 255, 36, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--neon-green); }
         .card-text h4 { margin: 0 0 5px; font-size: 16px; }
         .card-text p { margin: 0; font-size: 12px; color: var(--text-dim); }
 
-        .weather-card {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            border-radius: 20px; padding: 20px; color: white; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer;
-        }
+        .weather-card { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border-radius: 20px; padding: 20px; color: white; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
         .weather-info h3 { margin: 0; font-size: 32px; }
         .weather-info p { margin: 5px 0 0; font-size: 14px; opacity: 0.8; }
         .weather-icon { font-size: 40px; }
 
-        .developer-card {
-            background: linear-gradient(to right, rgba(0,0,0,0.9), rgba(0,0,0,0.4)), url('https://i.postimg.cc/bNZ7t1fC/Whats-App-Image-2026-09-28-at-11-59-13-AM.jpg') center/cover;
-            border-radius: 20px; padding: 30px 20px; margin: 20px; border: 1px solid var(--border-color); position: relative;
-        }
+        .developer-card { background: linear-gradient(to right, rgba(0,0,0,0.9), rgba(0,0,0,0.4)), url('https://i.postimg.cc/bNZ7t1fC/Whats-App-Image-2026-09-28-at-11-59-13-AM.jpg') center/cover; border-radius: 20px; padding: 30px 20px; margin: 20px; border: 1px solid var(--border-color); position: relative; }
         .developer-card h4 { color: var(--neon-green); margin: 0 0 5px; font-size: 14px; }
         .developer-card h3 { margin: 0; font-size: 22px; color: #fff; }
 
         .section-header { padding: 20px; font-size: 20px; font-weight: bold; border-bottom: 1px solid var(--border-color); margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
-        input[type="text"], input[type="time"], select { 
-            width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 12px; font-size: 15px; background: var(--bg-card); color: var(--text-light); box-sizing: border-box; outline: none;
-        }
+        input[type="text"], input[type="time"], select { width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 12px; font-size: 15px; background: var(--bg-card); color: var(--text-light); box-sizing: border-box; outline: none; }
         input:focus, select:focus { border-color: var(--neon-green); }
         .btn-primary { width: 100%; padding: 14px; background-color: var(--neon-green); color: #000; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; }
         
@@ -78,27 +45,36 @@
         .task-title { font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 10px; }
         .task-badge { background: rgba(159, 255, 36, 0.1); color: var(--neon-green); padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; }
 
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; max-width: 450px; background: rgba(13, 13, 13, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-between; padding: 15px 5px 25px; border-top: 1px solid var(--border-color); z-index: 100; box-sizing: border-box;
-        }
-        .nav-item { display: flex; flex-direction: column; align-items: center; background: none; border: none; color: var(--text-dim); font-size: 11px; font-weight: 600; gap: 5px; cursor: pointer; flex: 1; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 450px; background: rgba(13, 13, 13, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-between; padding: 10px 5px 20px; border-top: 1px solid var(--border-color); z-index: 100; box-sizing: border-box; overflow-x: auto;}
+        .nav-item { display: flex; flex-direction: column; align-items: center; background: none; border: none; color: var(--text-dim); font-size: 11px; font-weight: 600; gap: 5px; cursor: pointer; flex: 1; min-width: 60px;}
         .nav-item.active { color: var(--neon-green); }
-        .nav-icon { font-size: 22px; }
+        .nav-icon { font-size: 20px; }
 
+        /* ستايل قسم الشات الجديد */
+        .chat-container { display: flex; flex-direction: column; height: 75vh; padding: 0 10px;}
+        .chat-box { flex: 1; background: var(--bg-card); border-radius: 15px; border: 1px solid var(--border-color); padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px;}
+        .message { max-width: 75%; padding: 12px 15px; border-radius: 20px; font-size: 14px; line-height: 1.4;}
+        .message.sent { background: var(--neon-green); color: #000; align-self: flex-start; border-top-right-radius: 5px;}
+        .message.received { background: #333; color: white; align-self: flex-end; border-top-left-radius: 5px;}
+        .msg-info { font-size: 10px; opacity: 0.6; margin-bottom: 5px; display: block; }
+        .chat-input-area { display: flex; gap: 10px; }
+        .chat-input-area input { margin-bottom: 0; border-radius: 25px; }
+        .chat-input-area button { width: 60px; border-radius: 25px; font-size: 20px; display:flex; align-items:center; justify-content:center;}
+        .notice-msg { text-align: center; color: var(--text-dim); font-size: 12px; margin-bottom: 10px; }
+
+        #alarmModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: var(--bg-card); padding: 30px; border-radius: 20px; text-align: center; width: 80%; max-width: 320px; border: 1px solid var(--neon-green); }
+        .modal-content h3 { color: var(--text-light); }
+        .modal-content p { color: var(--neon-green); font-size: 18px; font-weight: bold; }
+        .weather-detail-item { display: flex; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid var(--border-color); font-size: 15px; }
+        .weather-detail-item span:last-child { color: var(--neon-green); font-weight: bold; }
+        
         .score-board { display: flex; justify-content: space-around; font-size: 16px; font-weight: bold; margin-bottom: 15px; background: var(--bg-card); padding: 12px; border-radius: 10px; }
         .tic-tac-toe { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 0 20px; }
         .cell { background-color: var(--bg-card); height: 85px; display: flex; align-items: center; justify-content: center; font-size: 35px; font-weight: bold; border-radius: 12px; border: 1px solid var(--border-color); }
         #snakeCanvas { background-color: #000; border-radius: 12px; display: block; margin: 0 auto; width: 100%; max-width: 300px; height: 300px; border: 1px solid var(--border-color); }
         .d-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; width: 180px; margin: 15px auto; }
         .d-pad button { padding: 15px; background: var(--bg-card); color: var(--neon-green); border: 1px solid var(--border-color); border-radius: 10px; font-size: 20px; }
-
-        #alarmModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: var(--bg-card); padding: 30px; border-radius: 20px; text-align: center; width: 80%; max-width: 320px; border: 1px solid var(--neon-green); }
-        .modal-content h3 { color: var(--text-light); }
-        .modal-content p { color: var(--neon-green); font-size: 18px; font-weight: bold; }
-
-        .weather-detail-item { display: flex; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid var(--border-color); font-size: 15px; }
-        .weather-detail-item span:last-child { color: var(--neon-green); font-weight: bold; }
     </style>
 </head>
 <body>
@@ -137,32 +113,43 @@
                     <div class="weather-icon" id="mainWeatherIcon">☁️</div>
                 </div>
 
-                <div class="custom-card green-tint" onclick="switchMainTab('reminders')">
-                    <div class="card-icon">📋</div>
+                <div class="custom-card green-tint" onclick="switchMainTab('chat')">
+                    <div class="card-icon">💬</div>
                     <div class="card-text">
-                        <h4>المهام الجديدة</h4>
-                        <p>أضف مهامك وتنبيهاتك اليومية هنا</p>
-                    </div>
-                </div>
-                <div class="custom-card" onclick="switchMainTab('adhkar')">
-                    <div class="card-icon">📿</div>
-                    <div class="card-text">
-                        <h4>الأذكار التلقائية</h4>
-                        <p>حافظ على أذكارك ونشط التنبيهات</p>
+                        <h4>غرفة الدردشة</h4>
+                        <p>تواصل مع أصدقائك داخل التطبيق</p>
                     </div>
                 </div>
             </div>
 
-            <!-- بطاقة المطور مع التعديل الجديد -->
             <div class="developer-card">
                 <h4>تصميم وتطوير</h4>
                 <h3>عبد الله</h3>
             </div>
         </div>
 
+        <!-- قسم الشات (تجريبي) -->
+        <div id="chatSection" style="display: none;">
+            <div class="section-header">المحادثة 💬</div>
+            <div class="chat-container">
+                <div class="notice-msg">⚠️ هذه واجهة تجريبية. لربطها بالإنترنت نحتاج لربطها بقاعدة بيانات لاحقاً.</div>
+                
+                <div class="chat-box" id="chatMessages">
+                    <div class="message received">
+                        <span class="msg-info">النظام - 10:00 ص</span>
+                        أهلاً بك في غرفة الدردشة يا عبد الله! جرب إرسال رسالة الآن للتعرف على التصميم.
+                    </div>
+                </div>
+                
+                <div class="chat-input-area">
+                    <input type="text" id="chatInput" placeholder="اكتب رسالتك هنا...">
+                    <button class="btn-primary" onclick="sendMockMessage()">➤</button>
+                </div>
+            </div>
+        </div>
+
         <div id="weatherSection" style="display: none;">
             <div class="section-header">الطقس ☁️ <button class="btn-primary" style="width: auto; padding: 5px 15px; font-size: 12px;" onclick="getWeather()">تحديث</button></div>
-            
             <div style="padding: 0 20px;">
                 <div class="weather-card" style="text-align: center; display: block; padding: 30px 20px; background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);">
                     <div id="fullWeatherIcon" style="font-size: 60px; margin-bottom: 10px;">☁️</div>
@@ -171,7 +158,6 @@
                     <p id="fullCity" style="font-size: 16px; opacity: 0.8; margin: 0;">--</p>
                 </div>
             </div>
-
             <div style="margin-top: 20px;">
                 <div class="weather-detail-item"><span>الرطوبة 💧</span> <span id="wHumidity">--%</span></div>
                 <div class="weather-detail-item"><span>سرعة الرياح 💨</span> <span id="wWind">-- km/h</span></div>
@@ -183,34 +169,22 @@
             <div class="section-header">الصلاة 🕌</div>
             <div style="padding: 0 20px;">
                 <select id="adhanSoundSelect">
-                    <option value="https://www.islamcan.com/audio/adhan/azan1.mp3">أذان مكة المكرمة</option>
-                    <option value="https://www.islamcan.com/audio/adhan/azan2.mp3">أذان المدينة المنورة</option>
-                    <option value="https://www.islamcan.com/audio/adhan/azan3.mp3">أذان الأقصى</option>
+                    <option value="https://www.islamcan.com/audio/adhan/azan1.mp3">أذان مكة</option>
+                    <option value="https://www.islamcan.com/audio/adhan/azan2.mp3">أذان المدينة</option>
                 </select>
-                <button class="btn-primary" onclick="activatePrayerTimes()">تحديث الأوقات وتفعيل الأذان ⚡</button>
-                <p id="prayerStatus" style="color: var(--text-dim); text-align: center; margin-top:10px;">اضغط للتحميل الفوري</p>
+                <button class="btn-primary" onclick="activatePrayerTimes()">تحديث وتفعيل الأذان ⚡</button>
+                <p id="prayerStatus" style="color: var(--text-dim); text-align: center; margin-top:10px;">اضغط للتحميل</p>
             </div>
             <div id="prayerTimesList" style="margin-top:20px;"></div>
-        </div>
-
-        <div id="remindersSection" style="display: none;">
-            <div class="section-header">المهام 📋</div>
-            <div style="padding: 0 20px;">
-                <input type="text" id="taskName" placeholder="أدخل عنوان التذكير...">
-                <input type="time" id="taskTime">
-                <button class="btn-primary" onclick="prepareAndAddReminder()">إضافة مهمة</button>
-            </div>
-            <ul id="reminderList" style="margin-top:20px;"></ul>
         </div>
 
         <div id="adhkarSection" style="display: none;">
             <div class="section-header">الأذكار 📿</div>
             <div style="padding: 0 20px;">
                 <select id="adhkarInterval">
-                    <option value="0">إيقاف التنبيهات</option>
-                    <option value="0.25">كل 15 ثانية (للتجربة)</option>
-                    <option value="30">كل نصف ساعة</option>
-                    <option value="60">كل ساعة</option>
+                    <option value="0">إيقاف</option>
+                    <option value="0.25">15 ثانية (تجربة)</option>
+                    <option value="30">نصف ساعة</option>
                 </select>
                 <button class="btn-primary" onclick="startAdhkarTimer()">تفعيل التنبيه</button>
                 <p id="adhkarStatus" style="color: var(--neon-green); text-align: center; margin-top:15px; font-weight:bold;"></p>
@@ -226,8 +200,8 @@
 
             <div id="xoContainer">
                 <div class="score-board">
-                    <span id="scoreX" style="color: var(--neon-green);">اللاعب X: 0</span>
-                    <span id="scoreO" style="color: #ef4444;">اللاعب O: 0</span>
+                    <span id="scoreX" style="color: var(--neon-green);">X: 0</span>
+                    <span id="scoreO" style="color: #ef4444;">O: 0</span>
                 </div>
                 <div class="tic-tac-toe" id="board">
                     <div class="cell" onclick="playXO(this, 0)"></div><div class="cell" onclick="playXO(this, 1)"></div><div class="cell" onclick="playXO(this, 2)"></div>
@@ -236,7 +210,6 @@
                 </div>
                 <div style="padding: 0 20px;"><button class="btn-primary" style="margin-top:15px;" onclick="resetXO()">إعادة اللعب</button></div>
             </div>
-
             <div id="snakeContainer" style="display: none;">
                 <div class="score-board"><span id="snakeScoreText" style="color: var(--neon-green);">النتيجة: 0</span></div>
                 <canvas id="snakeCanvas" width="300" height="300"></canvas>
@@ -248,25 +221,13 @@
             </div>
         </div>
 
-        <!-- شريط التنقل السفلي -->
         <nav class="bottom-nav">
-            <button id="navHome" class="nav-item active" onclick="switchMainTab('home')">
-                <span class="nav-icon">🏠</span><span>الرئيسية</span>
-            </button>
-            <button id="navPrayer" class="nav-item" onclick="switchMainTab('prayer')">
-                <span class="nav-icon">🕌</span><span>الصلاة</span>
-            </button>
-            <button id="navAdhkar" class="nav-item" onclick="switchMainTab('adhkar')">
-                <span class="nav-icon">📿</span><span>الأذكار</span>
-            </button>
-            <button id="navReminders" class="nav-item" onclick="switchMainTab('reminders')">
-                <span class="nav-icon">📋</span><span>المهام</span>
-            </button>
-            <button id="navGames" class="nav-item" onclick="switchMainTab('games')">
-                <span class="nav-icon">🎮</span><span>الألعاب</span>
-            </button>
+            <button id="navHome" class="nav-item active" onclick="switchMainTab('home')"><span class="nav-icon">🏠</span><span>الرئيسية</span></button>
+            <button id="navPrayer" class="nav-item" onclick="switchMainTab('prayer')"><span class="nav-icon">🕌</span><span>الصلاة</span></button>
+            <button id="navAdhkar" class="nav-item" onclick="switchMainTab('adhkar')"><span class="nav-icon">📿</span><span>الأذكار</span></button>
+            <button id="navChat" class="nav-item" onclick="switchMainTab('chat')"><span class="nav-icon">💬</span><span>محادثة</span></button>
+            <button id="navGames" class="nav-item" onclick="switchMainTab('games')"><span class="nav-icon">🎮</span><span>ألعاب</span></button>
         </nav>
-
     </div>
 
     <audio id="alarmSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" loop preload="auto"></audio>
@@ -277,12 +238,9 @@
             let savedName = localStorage.getItem("appUserName");
             let savedHandle = localStorage.getItem("appUserHandle");
             let savedPic = localStorage.getItem("appUserPic");
-            
             if (savedName) document.getElementById("userNameInput").value = savedName;
             if (savedHandle) document.getElementById("userHandleInput").value = savedHandle;
             if (savedPic) document.getElementById("userProfileImage").src = savedPic;
-
-            // جلب الطقس فوراً عند تشغيل التطبيق
             getWeather(); 
         };
 
@@ -303,34 +261,47 @@
             }
         });
 
+        // --- نظام إرسال الرسائل (واجهة فقط حالياً) ---
+        function sendMockMessage() {
+            let inputField = document.getElementById("chatInput");
+            let msgText = inputField.value.trim();
+            if(msgText === "") return;
+            
+            let myName = document.getElementById("userNameInput").value || "أنا";
+            let chatBox = document.getElementById("chatMessages");
+            
+            let newMsg = document.createElement("div");
+            newMsg.className = "message sent";
+            
+            let timeNow = new Date();
+            let timeStr = timeNow.getHours() + ":" + (timeNow.getMinutes()<10?'0':'') + timeNow.getMinutes();
+            
+            newMsg.innerHTML = `<span class="msg-info">${myName} - ${timeStr}</span>${msgText}`;
+            chatBox.appendChild(newMsg);
+            
+            inputField.value = "";
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // --- باقي الأنظمة كما هي ---
         function getWeather() {
             fetchWeatherByCity("طرابلس");
-
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => fetchWeatherData(position.coords.latitude, position.coords.longitude),
-                    (error) => console.log("تم الاعتماد على الموقع الافتراضي"),
-                    { timeout: 5000 }
+                    (error) => console.log("تم الاعتماد على الموقع الافتراضي"), { timeout: 5000 }
                 );
             }
         }
 
         function fetchWeatherData(lat, lon) {
             fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&hourly=relativehumidity_2m,apparent_temperature,windspeed_10m`)
-            .then(res => res.json())
-            .then(data => updateWeatherUI(data, "موقعك الحالي"))
-            .catch(e => console.log("استمرار استخدام الموقع الافتراضي"));
+            .then(res => res.json()).then(data => updateWeatherUI(data, "موقعك الحالي")).catch(e => console.log("استمرار استخدام الموقع الافتراضي"));
         }
 
         function fetchWeatherByCity(cityName) {
-            const lat = 34.4367;
-            const lon = 35.8362;
-            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&hourly=relativehumidity_2m,apparent_temperature,windspeed_10m`)
-            .then(res => res.json())
-            .then(data => updateWeatherUI(data, cityName))
-            .catch(e => {
-                document.getElementById("mainCity").innerText = "تعذر الاتصال بالإنترنت";
-            });
+            fetch(`https://api.open-meteo.com/v1/forecast?latitude=34.4367&longitude=35.8362&current_weather=true&hourly=relativehumidity_2m,apparent_temperature,windspeed_10m`)
+            .then(res => res.json()).then(data => updateWeatherUI(data, cityName)).catch(e => { document.getElementById("mainCity").innerText = "تعذر الاتصال بالإنترنت"; });
         }
 
         function updateWeatherUI(data, cityName) {
@@ -349,12 +320,10 @@
             document.getElementById("mainTemp").innerText = temp + "°";
             document.getElementById("mainCity").innerText = cond + " في " + cityName;
             document.getElementById("mainWeatherIcon").innerText = icon;
-
             document.getElementById("fullTemp").innerText = temp + "°C";
             document.getElementById("fullCity").innerText = cityName;
             document.getElementById("fullCondition").innerText = cond;
             document.getElementById("fullWeatherIcon").innerText = icon;
-
             document.getElementById("wWind").innerText = wind + " km/h";
             if(data.hourly && data.hourly.relativehumidity_2m) {
                 document.getElementById("wHumidity").innerText = data.hourly.relativehumidity_2m[0] + "%";
@@ -362,20 +331,18 @@
             }
         }
 
-
         function switchMainTab(tab) {
-            document.getElementById('homeSection').style.display = tab === 'home' ? 'block' : 'none';
-            document.getElementById('prayerSection').style.display = tab === 'prayer' ? 'block' : 'none';
-            document.getElementById('adhkarSection').style.display = tab === 'adhkar' ? 'block' : 'none';
-            document.getElementById('remindersSection').style.display = tab === 'reminders' ? 'block' : 'none';
-            document.getElementById('gamesSection').style.display = tab === 'games' ? 'block' : 'none';
-            document.getElementById('weatherSection').style.display = tab === 'weather' ? 'block' : 'none'; 
-            
+            ['home', 'prayer', 'adhkar', 'chat', 'games', 'weather'].forEach(t => {
+                let sec = document.getElementById(t + 'Section');
+                if(sec) sec.style.display = 'none';
+            });
+            document.getElementById(tab + 'Section').style.display = 'block';
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            
             if(tab === 'home' || tab === 'weather') document.getElementById('navHome').classList.add('active'); 
             if(tab === 'prayer') document.getElementById('navPrayer').classList.add('active');
             if(tab === 'adhkar') document.getElementById('navAdhkar').classList.add('active');
-            if(tab === 'reminders') document.getElementById('navReminders').classList.add('active');
+            if(tab === 'chat') document.getElementById('navChat').classList.add('active');
             if(tab === 'games') document.getElementById('navGames').classList.add('active');
         }
 
@@ -388,131 +355,59 @@
             document.getElementById('btnSnakeGame').style.color = game === 'snake' ? '#000' : 'var(--text-light)';
         }
 
-        function requestNotificationPermission() {
-            if ("Notification" in window && Notification.permission !== "granted") Notification.requestPermission();
-        }
+        function requestNotificationPermission() { if ("Notification" in window && Notification.permission !== "granted") Notification.requestPermission(); }
 
         let alarmAudio = document.getElementById("alarmSound");
         let adhanAudio = document.getElementById("adhanAudio");
         
         function triggerAlarm(title, messageText, isAdhan = false) {
-            document.getElementById("alarmTitle").innerText = title;
-            document.getElementById("alarmMessageText").innerText = messageText;
-            document.getElementById("alarmModal").style.display = "flex";
-            if(isAdhan) { adhanAudio.src = document.getElementById("adhanSoundSelect").value; adhanAudio.play(); } 
-            else { alarmAudio.play(); }
-            if ("Notification" in window && Notification.permission === "granted") {
-                new Notification(title, { body: messageText });
-            }
+            document.getElementById("alarmTitle").innerText = title; document.getElementById("alarmMessageText").innerText = messageText; document.getElementById("alarmModal").style.display = "flex";
+            if(isAdhan) { adhanAudio.src = document.getElementById("adhanSoundSelect").value; adhanAudio.play(); } else { alarmAudio.play(); }
+            if ("Notification" in window && Notification.permission === "granted") new Notification(title, { body: messageText });
         }
-        
-        function stopAlarm() {
-            alarmAudio.pause(); alarmAudio.currentTime = 0;
-            adhanAudio.pause(); adhanAudio.currentTime = 0;
-            document.getElementById("alarmModal").style.display = "none";
-        }
+        function stopAlarm() { alarmAudio.pause(); alarmAudio.currentTime = 0; adhanAudio.pause(); adhanAudio.currentTime = 0; document.getElementById("alarmModal").style.display = "none"; }
 
         let prayerTimings = {};
         function activatePrayerTimes() {
-            requestNotificationPermission();
-            adhanAudio.src = document.getElementById("adhanSoundSelect").value;
-            adhanAudio.play().then(() => { adhanAudio.pause(); adhanAudio.currentTime = 0; }).catch(e => {});
+            requestNotificationPermission(); adhanAudio.src = document.getElementById("adhanSoundSelect").value; adhanAudio.play().then(() => { adhanAudio.pause(); adhanAudio.currentTime = 0; }).catch(e => {});
             document.getElementById("prayerStatus").innerText = "جاري جلب الأوقات... ⚡";
-            fetch(`https://api.aladhan.com/v1/timingsByCity?city=Tripoli&country=Lebanon&method=8`)
-            .then(res => res.json())
-            .then(data => displayPrayerTimes(data.data.timings))
-            .catch(e => { document.getElementById("prayerStatus").innerText = "فشل الاتصال"; });
+            fetch(`https://api.aladhan.com/v1/timingsByCity?city=Tripoli&country=Lebanon&method=8`).then(res => res.json()).then(data => displayPrayerTimes(data.data.timings)).catch(e => { document.getElementById("prayerStatus").innerText = "فشل الاتصال"; });
         }
         function displayPrayerTimes(timings) {
-            prayerTimings = timings;
-            document.getElementById("prayerStatus").innerText = "تم التفعيل ✔️";
-            document.getElementById("prayerTimesList").innerHTML = `
-                <div class="task-card"><span class="task-title">الفجر</span> <span class="task-badge">${timings.Fajr}</span></div>
-                <div class="task-card"><span class="task-title">الظهر</span> <span class="task-badge">${timings.Dhuhr}</span></div>
-                <div class="task-card"><span class="task-title">العصر</span> <span class="task-badge">${timings.Asr}</span></div>
-                <div class="task-card"><span class="task-title">المغرب</span> <span class="task-badge">${timings.Maghrib}</span></div>
-                <div class="task-card"><span class="task-title">العشاء</span> <span class="task-badge">${timings.Isha}</span></div>
-            `;
+            prayerTimings = timings; document.getElementById("prayerStatus").innerText = "تم التفعيل ✔️";
+            document.getElementById("prayerTimesList").innerHTML = `<div class="task-card"><span class="task-title">الفجر</span> <span class="task-badge">${timings.Fajr}</span></div><div class="task-card"><span class="task-title">الظهر</span> <span class="task-badge">${timings.Dhuhr}</span></div><div class="task-card"><span class="task-title">العصر</span> <span class="task-badge">${timings.Asr}</span></div><div class="task-card"><span class="task-title">المغرب</span> <span class="task-badge">${timings.Maghrib}</span></div><div class="task-card"><span class="task-title">العشاء</span> <span class="task-badge">${timings.Isha}</span></div>`;
         }
 
-        let adhkarIntervalId = null;
-        const randomAdhkar = ["أستغفر الله وأتوب إليه 🌸", "سبحان الله وبحمده ✨", "لا إله إلا أنت سبحانك 🤲", "اللهم صلِ على محمد 📿"];
+        let adhkarIntervalId = null; const randomAdhkar = ["أستغفر الله وأتوب إليه 🌸", "سبحان الله وبحمده ✨", "لا إله إلا أنت سبحانك 🤲", "اللهم صلِ على محمد 📿"];
         function startAdhkarTimer() {
-            requestNotificationPermission(); 
-            let minutes = parseFloat(document.getElementById("adhkarInterval").value);
+            requestNotificationPermission(); let minutes = parseFloat(document.getElementById("adhkarInterval").value);
             if(adhkarIntervalId) clearInterval(adhkarIntervalId);
             if (minutes === 0) { document.getElementById("adhkarStatus").innerText = "متوقف"; return; }
             document.getElementById("adhkarStatus").innerText = "نشط كل " + minutes + " دقيقة";
             alarmAudio.play().then(() => { alarmAudio.pause(); }).catch(e => {});
-            adhkarIntervalId = setInterval(() => {
-                triggerAlarm("وقت الذكر 📿", randomAdhkar[Math.floor(Math.random() * randomAdhkar.length)], false);
-            }, minutes * 60 * 1000);
+            adhkarIntervalId = setInterval(() => { triggerAlarm("وقت الذكر 📿", randomAdhkar[Math.floor(Math.random() * randomAdhkar.length)], false); }, minutes * 60 * 1000);
         }
 
-        function prepareAndAddReminder() {
-            requestNotificationPermission();
-            alarmAudio.play().then(() => { alarmAudio.pause(); }).catch(e => {});
-            let task = document.getElementById("taskName").value;
-            let time = document.getElementById("taskTime").value;
-            if(task === "" || time === "") return;
-            
-            let list = document.getElementById("reminderList");
-            let li = document.createElement("li");
-            li.className = "task-card";
-            li.innerHTML = `<span class="task-title">☑ ${task}</span> <span class="task-badge">${time}</span>`;
-            list.appendChild(li);
-            
-            document.getElementById("taskName").value = "";
-            document.getElementById("taskTime").value = "";
-
-            let checkTime = setInterval(() => {
-                let now = new Date();
-                let ct = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-                if(ct === time && now.getSeconds() === 0) { triggerAlarm("تذكير ⏰", task, false); clearInterval(checkTime); }
-            }, 1000); 
-        }
-
-        let currentPlayer = "X", scoreX = 0, scoreO = 0, boardState = ["", "", "", "", "", "", "", "", ""], xoActive = true;
-        const winCond = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
+        let currentPlayer = "X", scoreX = 0, scoreO = 0, boardState = ["", "", "", "", "", "", "", "", ""], xoActive = true; const winCond = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
         function playXO(cell, index) {
             if(boardState[index] !== "" || !xoActive) return;
-            boardState[index] = currentPlayer; cell.innerText = currentPlayer;
-            cell.style.color = currentPlayer === "X" ? "var(--neon-green)" : "#ef4444";
-            
-            let won = false;
-            for(let i=0; i<winCond.length; i++) {
-                const [a,b,c] = winCond[i];
-                if(boardState[a] && boardState[a]===boardState[b] && boardState[a]===boardState[c]) won = true;
-            }
-            if(won) {
-                currentPlayer === "X" ? scoreX++ : scoreO++;
-                document.getElementById("scoreX").innerText = "اللاعب X: " + scoreX;
-                document.getElementById("scoreO").innerText = "اللاعب O: " + scoreO;
-                document.getElementById("displayScore").innerText = scoreX + scoreO; 
-                setTimeout(() => alert("فاز " + currentPlayer), 50); xoActive = false; return;
-            }
+            boardState[index] = currentPlayer; cell.innerText = currentPlayer; cell.style.color = currentPlayer === "X" ? "var(--neon-green)" : "#ef4444";
+            let won = false; for(let i=0; i<winCond.length; i++) { const [a,b,c] = winCond[i]; if(boardState[a] && boardState[a]===boardState[b] && boardState[a]===boardState[c]) won = true; }
+            if(won) { currentPlayer === "X" ? scoreX++ : scoreO++; document.getElementById("scoreX").innerText = "X: " + scoreX; document.getElementById("scoreO").innerText = "O: " + scoreO; setTimeout(() => alert("فاز " + currentPlayer), 50); xoActive = false; return; }
             currentPlayer = currentPlayer === "X" ? "O" : "X";
         }
         function resetXO() { boardState = ["","","","","","","","",""]; xoActive = true; currentPlayer = "X"; document.querySelectorAll('.cell').forEach(c => c.innerText = ""); }
 
-        let sCanvas = document.getElementById("snakeCanvas"), sCtx = sCanvas.getContext("2d");
-        let box = 15, snake = [], snakeDir = {x:0,y:0}, nextDir = {x:0,y:0}, food = {x:0,y:0}, sScore = 0, sGameActive = false, sInterval;
-        function startSnakeGame() {
-            if(sGameActive) return;
-            sGameActive = true; snake = [{x: 10*box, y: 10*box}]; snakeDir = {x:box, y:0}; nextDir = {x:box, y:0}; sScore = 0;
-            spawnFood(); clearInterval(sInterval); sInterval = setInterval(drawSnake, 130);
-        }
+        let sCanvas = document.getElementById("snakeCanvas"), sCtx = sCanvas.getContext("2d"), box = 15, snake = [], snakeDir = {x:0,y:0}, nextDir = {x:0,y:0}, food = {x:0,y:0}, sScore = 0, sGameActive = false, sInterval;
+        function startSnakeGame() { if(sGameActive) return; sGameActive = true; snake = [{x: 10*box, y: 10*box}]; snakeDir = {x:box, y:0}; nextDir = {x:box, y:0}; sScore = 0; spawnFood(); clearInterval(sInterval); sInterval = setInterval(drawSnake, 130); }
         function spawnFood() { food = { x: Math.floor(Math.random()*20)*box, y: Math.floor(Math.random()*20)*box }; }
         function changeDir(dx, dy) { if(sGameActive && (dx*box !== -snakeDir.x || dy*box !== -snakeDir.y)) nextDir = {x: dx*box, y: dy*box}; }
         function drawSnake() {
             sCtx.fillStyle = "#000"; sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
             snakeDir = nextDir; let sX = snake[0].x + snakeDir.x, sY = snake[0].y + snakeDir.y;
-            if(sX < 0 || sX >= sCanvas.width || sY < 0 || sY >= sCanvas.height || snake.some(s => s.x===sX && s.y===sY)) {
-                clearInterval(sInterval); sGameActive = false; return alert("انتهت اللعبة!");
-            }
+            if(sX < 0 || sX >= sCanvas.width || sY < 0 || sY >= sCanvas.height || snake.some(s => s.x===sX && s.y===sY)) { clearInterval(sInterval); sGameActive = false; return alert("انتهت اللعبة!"); }
             if(sX === food.x && sY === food.y) { sScore += 10; document.getElementById("snakeScoreText").innerText = "النتيجة: " + sScore; spawnFood(); } else { snake.pop(); }
-            snake.unshift({x: sX, y: sY});
-            sCtx.fillStyle = "#ef4444"; sCtx.fillRect(food.x, food.y, box, box);
+            snake.unshift({x: sX, y: sY}); sCtx.fillStyle = "#ef4444"; sCtx.fillRect(food.x, food.y, box, box);
             snake.forEach((s, i) => { sCtx.fillStyle = i===0 ? "#9fff24" : "#fff"; sCtx.fillRect(s.x, s.y, box, box); });
         }
     </script>
