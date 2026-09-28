@@ -54,8 +54,20 @@
         .nav-item.active { color: var(--neon-green); }
         .nav-icon { font-size: 20px; }
 
-        /* الشات */
+        /* نظام الأصدقاء والشات الخاص */
         .chat-container { display: flex; flex-direction: column; height: 75vh; padding: 0 10px;}
+        .add-friend-box { display: flex; gap: 10px; margin-bottom: 15px; padding: 0 10px;}
+        .add-friend-box input { margin-bottom: 0; }
+        .friend-list { display: flex; flex-direction: column; gap: 10px; padding: 0 10px; overflow-y: auto;}
+        .friend-item { background: var(--bg-card); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; cursor: pointer;}
+        .friend-item:active { background: #333; }
+        .friend-info { display: flex; align-items: center; gap: 10px; }
+        .friend-avatar { width: 40px; height: 40px; background: var(--border-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--neon-green);}
+        
+        /* واجهة الدردشة الخاصة */
+        #privateChatArea { display: none; flex-direction: column; height: 100%; }
+        .chat-header { background: var(--bg-card); padding: 15px; border-radius: 15px; display: flex; align-items: center; gap: 15px; margin-bottom: 10px; border: 1px solid var(--border-color);}
+        .back-btn { background: none; border: none; color: var(--neon-green); font-size: 24px; cursor: pointer; padding: 0; }
         .chat-box { flex: 1; background: var(--bg-card); border-radius: 15px; border: 1px solid var(--border-color); padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px;}
         .message { max-width: 75%; padding: 12px 15px; border-radius: 20px; font-size: 14px; line-height: 1.4; word-wrap: break-word;}
         .message.sent { background: var(--neon-green); color: #000; align-self: flex-start; border-top-right-radius: 5px;}
@@ -64,14 +76,11 @@
         .chat-input-area { display: flex; gap: 10px; }
         .chat-input-area input { margin-bottom: 0; border-radius: 25px; }
         .chat-input-area button { width: 60px; border-radius: 25px; font-size: 20px; display:flex; align-items:center; justify-content:center;}
-        .notice-msg { text-align: center; color: var(--text-dim); font-size: 12px; margin-bottom: 10px; }
 
         #alarmModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { background: var(--bg-card); padding: 30px; border-radius: 20px; text-align: center; width: 80%; max-width: 320px; border: 1px solid var(--neon-green); }
         .modal-content h3 { color: var(--text-light); }
         .modal-content p { color: var(--neon-green); font-size: 18px; font-weight: bold; }
-        .weather-detail-item { display: flex; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid var(--border-color); font-size: 15px; }
-        .weather-detail-item span:last-child { color: var(--neon-green); font-weight: bold; }
         
         .score-board { display: flex; justify-content: space-around; font-size: 16px; font-weight: bold; margin-bottom: 15px; background: var(--bg-card); padding: 12px; border-radius: 10px; }
         .tic-tac-toe { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 0 20px; }
@@ -93,6 +102,7 @@
 
     <div class="app-container">
         
+        <!-- قسم الرئيسية -->
         <div id="homeSection">
             <div class="header-top">
                 <span onclick="switchMainTab('weather')" style="cursor: pointer; font-size: 20px;">☁️</span>
@@ -105,24 +115,19 @@
                     <img id="userProfileImage" class="profile-pic" src="https://via.placeholder.com/100/1a1a1a/888888?text=+" alt="صورة المستخدم">
                 </div>
                 <input type="text" id="userNameInput" class="profile-name" value="اسم المستخدم" onkeyup="saveProfile()">
-                <input type="text" id="userHandleInput" class="profile-handle" value="@username" onkeyup="saveProfile()">
+                <input type="text" id="userHandleInput" class="profile-handle" value="@username" placeholder="@username" onkeyup="saveProfile()">
+                <p style="color:var(--text-dim); font-size:11px;">اليوزرنيم (@) هو اللي رح يخلي أصدقاءك يضيفوك</p>
             </div>
 
             <div class="card-container">
                 <div class="weather-card" onclick="switchMainTab('weather')">
-                    <div class="weather-info">
-                        <h3 id="mainTemp">--°</h3>
-                        <p id="mainCity">جاري التحميل...</p>
-                    </div>
+                    <div class="weather-info"><h3 id="mainTemp">--°</h3><p id="mainCity">جاري التحميل...</p></div>
                     <div class="weather-icon" id="mainWeatherIcon">☁️</div>
                 </div>
 
                 <div class="custom-card green-tint" onclick="switchMainTab('chat')">
                     <div class="card-icon">💬</div>
-                    <div class="card-text">
-                        <h4>غرفة الدردشة</h4>
-                        <p>تواصل مع أصدقائك داخل التطبيق</p>
-                    </div>
+                    <div class="card-text"><h4>الأصدقاء والمحادثات</h4><p>أضف أصدقاءك وابدأ الدردشة الخاصة</p></div>
                 </div>
             </div>
 
@@ -132,93 +137,68 @@
             </div>
         </div>
 
+        <!-- قسم الشات الخاص والأصدقاء -->
         <div id="chatSection" style="display: none;">
-            <div class="section-header">المحادثة 💬</div>
+            <div class="section-header">الأصدقاء 💬</div>
             <div class="chat-container">
-                <div class="notice-msg">أنت الآن متصل بغرفة الدردشة العامة 🟢</div>
                 
-                <div class="chat-box" id="chatMessages">
-                    <!-- ستظهر الرسائل هنا -->
+                <!-- واجهة قائمة الأصدقاء -->
+                <div id="friendsArea">
+                    <div class="add-friend-box">
+                        <input type="text" id="addFriendInput" placeholder="اكتب يوزرنيم الصديق (بدون @)...">
+                        <button class="btn-primary" style="width: auto; padding: 0 20px;" onclick="addFriend()">إضافة</button>
+                    </div>
+                    <p id="friendStatusMsg" style="text-align:center; color:var(--neon-green); font-size:12px; margin-top:0;"></p>
+                    
+                    <div class="friend-list" id="myFriendsList">
+                        <!-- تظهر قائمة الأصدقاء هنا -->
+                    </div>
                 </div>
-                
-                <div class="chat-input-area">
-                    <input type="text" id="chatInput" placeholder="اكتب رسالتك هنا..." onkeypress="if(event.key === 'Enter') sendRealMessage()">
-                    <button class="btn-primary" onclick="sendRealMessage()">➤</button>
+
+                <!-- واجهة المحادثة الخاصة -->
+                <div id="privateChatArea">
+                    <div class="chat-header">
+                        <button class="back-btn" onclick="closeChat()">➜</button>
+                        <div class="friend-avatar" id="chatAvatar">A</div>
+                        <strong id="chatFriendName">اسم الصديق</strong>
+                    </div>
+                    
+                    <div class="chat-box" id="chatMessages">
+                        <!-- تظهر الرسائل هنا -->
+                    </div>
+                    
+                    <div class="chat-input-area">
+                        <input type="text" id="chatInput" placeholder="اكتب رسالتك..." onkeypress="if(event.key === 'Enter') sendPrivateMessage()">
+                        <button class="btn-primary" onclick="sendPrivateMessage()">➤</button>
+                    </div>
                 </div>
+
             </div>
         </div>
 
+        <!-- باقي الأقسام -->
         <div id="weatherSection" style="display: none;">
             <div class="section-header">الطقس ☁️ <button class="btn-primary" style="width: auto; padding: 5px 15px; font-size: 12px;" onclick="getWeather()">تحديث</button></div>
-            <div style="padding: 0 20px;">
-                <div class="weather-card" style="text-align: center; display: block; padding: 30px 20px; background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);">
-                    <div id="fullWeatherIcon" style="font-size: 60px; margin-bottom: 10px;">☁️</div>
-                    <h2 id="fullTemp" style="font-size: 48px; margin: 0; color: var(--neon-green);">--°C</h2>
-                    <p id="fullCondition" style="font-size: 18px; margin: 10px 0;">--</p>
-                    <p id="fullCity" style="font-size: 16px; opacity: 0.8; margin: 0;">--</p>
-                </div>
-            </div>
-            <div style="margin-top: 20px;">
-                <div class="weather-detail-item"><span>الرطوبة 💧</span> <span id="wHumidity">--%</span></div>
-                <div class="weather-detail-item"><span>سرعة الرياح 💨</span> <span id="wWind">-- km/h</span></div>
-                <div class="weather-detail-item"><span>الشعور الفعلي 🌡️</span> <span id="wFeels">--°C</span></div>
-            </div>
+            <div style="padding: 0 20px;"><div class="weather-card" style="text-align: center; display: block; padding: 30px 20px; background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);"><div id="fullWeatherIcon" style="font-size: 60px; margin-bottom: 10px;">☁️</div><h2 id="fullTemp" style="font-size: 48px; margin: 0; color: var(--neon-green);">--°C</h2><p id="fullCondition" style="font-size: 18px; margin: 10px 0;">--</p><p id="fullCity" style="font-size: 16px; opacity: 0.8; margin: 0;">--</p></div></div>
+            <div style="margin-top: 20px;"><div class="weather-detail-item"><span>الرطوبة 💧</span> <span id="wHumidity">--%</span></div><div class="weather-detail-item"><span>سرعة الرياح 💨</span> <span id="wWind">-- km/h</span></div><div class="weather-detail-item"><span>الشعور الفعلي 🌡️</span> <span id="wFeels">--°C</span></div></div>
         </div>
 
         <div id="prayerSection" style="display: none;">
             <div class="section-header">الصلاة 🕌</div>
-            <div style="padding: 0 20px;">
-                <select id="adhanSoundSelect">
-                    <option value="https://www.islamcan.com/audio/adhan/azan1.mp3">أذان مكة</option>
-                    <option value="https://www.islamcan.com/audio/adhan/azan2.mp3">أذان المدينة</option>
-                </select>
-                <button class="btn-primary" onclick="activatePrayerTimes()">تحديث وتفعيل الأذان ⚡</button>
-                <p id="prayerStatus" style="color: var(--text-dim); text-align: center; margin-top:10px;">اضغط للتحميل</p>
-            </div>
+            <div style="padding: 0 20px;"><select id="adhanSoundSelect"><option value="https://www.islamcan.com/audio/adhan/azan1.mp3">أذان مكة</option><option value="https://www.islamcan.com/audio/adhan/azan2.mp3">أذان المدينة</option></select><button class="btn-primary" onclick="activatePrayerTimes()">تحديث وتفعيل الأذان ⚡</button><p id="prayerStatus" style="color: var(--text-dim); text-align: center; margin-top:10px;">اضغط للتحميل</p></div>
             <div id="prayerTimesList" style="margin-top:20px;"></div>
         </div>
 
         <div id="adhkarSection" style="display: none;">
             <div class="section-header">الأذكار 📿</div>
-            <div style="padding: 0 20px;">
-                <select id="adhkarInterval">
-                    <option value="0">إيقاف</option>
-                    <option value="0.25">15 ثانية (تجربة)</option>
-                    <option value="30">نصف ساعة</option>
-                </select>
-                <button class="btn-primary" onclick="startAdhkarTimer()">تفعيل التنبيه</button>
-                <p id="adhkarStatus" style="color: var(--neon-green); text-align: center; margin-top:15px; font-weight:bold;"></p>
-            </div>
+            <div style="padding: 0 20px;"><select id="adhkarInterval"><option value="0">إيقاف</option><option value="0.25">15 ثانية (تجربة)</option><option value="30">نصف ساعة</option></select><button class="btn-primary" onclick="startAdhkarTimer()">تفعيل التنبيه</button><p id="adhkarStatus" style="color: var(--neon-green); text-align: center; margin-top:15px; font-weight:bold;"></p></div>
         </div>
 
         <div id="gamesSection" style="display: none;">
             <div class="section-header">الألعاب 🎮</div>
-            <div style="padding: 0 20px; display:flex; gap:10px; margin-bottom:15px;">
-                <button id="btnTicTacToe" class="btn-primary" onclick="switchGameTab('xo')">إكس أو</button>
-                <button id="btnSnakeGame" class="btn-primary" style="background:var(--bg-card); color:var(--text-light);" onclick="switchGameTab('snake')">الثعبان</button>
-            </div>
-
-            <div id="xoContainer">
-                <div class="score-board">
-                    <span id="scoreX" style="color: var(--neon-green);">X: 0</span>
-                    <span id="scoreO" style="color: #ef4444;">O: 0</span>
-                </div>
-                <div class="tic-tac-toe" id="board">
-                    <div class="cell" onclick="playXO(this, 0)"></div><div class="cell" onclick="playXO(this, 1)"></div><div class="cell" onclick="playXO(this, 2)"></div>
-                    <div class="cell" onclick="playXO(this, 3)"></div><div class="cell" onclick="playXO(this, 4)"></div><div class="cell" onclick="playXO(this, 5)"></div>
-                    <div class="cell" onclick="playXO(this, 6)"></div><div class="cell" onclick="playXO(this, 7)"></div><div class="cell" onclick="playXO(this, 8)"></div>
-                </div>
-                <div style="padding: 0 20px;"><button class="btn-primary" style="margin-top:15px;" onclick="resetXO()">إعادة اللعب</button></div>
-            </div>
-            <div id="snakeContainer" style="display: none;">
-                <div class="score-board"><span id="snakeScoreText" style="color: var(--neon-green);">النتيجة: 0</span></div>
-                <canvas id="snakeCanvas" width="300" height="300"></canvas>
-                <div class="d-pad" dir="ltr">
-                    <div></div><button class="d-up" onmousedown="changeDir(0, -1)" ontouchstart="changeDir(0, -1)">▲</button><div></div>
-                    <button class="d-left" onmousedown="changeDir(-1, 0)" ontouchstart="changeDir(-1, 0)">◀</button><button class="d-down" onmousedown="changeDir(0, 1)" ontouchstart="changeDir(0, 1)">▼</button><button class="d-right" onmousedown="changeDir(1, 0)" ontouchstart="changeDir(1, 0)">▶</button>
-                </div>
-                <div style="padding: 0 20px;"><button class="btn-primary" onclick="startSnakeGame()">ابدأ اللعب</button></div>
-            </div>
+            <div style="padding: 0 20px; display:flex; gap:10px; margin-bottom:15px;"><button id="btnTicTacToe" class="btn-primary" onclick="switchGameTab('xo')">إكس أو</button><button id="btnSnakeGame" class="btn-primary" style="background:var(--bg-card); color:var(--text-light);" onclick="switchGameTab('snake')">الثعبان</button></div>
+            <div id="xoContainer"><div class="score-board"><span id="scoreX" style="color: var(--neon-green);">X: 0</span><span id="scoreO" style="color: #ef4444;">O: 0</span></div><div class="tic-tac-toe" id="board"><div class="cell" onclick="playXO(this, 0)"></div><div class="cell" onclick="playXO(this, 1)"></div><div class="cell" onclick="playXO(this, 2)"></div><div class="cell" onclick="playXO(this, 3)"></div><div class="cell" onclick="playXO(this, 4)"></div><div class="cell" onclick="playXO(this, 5)"></div><div class="cell" onclick="playXO(this, 6)"></div><div class="cell" onclick="playXO(this, 7)"></div><div class="cell" onclick="playXO(this, 8)"></div></div><div style="padding: 0 20px;"><button class="btn-primary" style="margin-top:15px;" onclick="resetXO()">إعادة اللعب</button></div></div>
+            <div id="snakeContainer" style="display: none;"><div class="score-board"><span id="snakeScoreText" style="color: var(--neon-green);">النتيجة: 0</span></div><canvas id="snakeCanvas" width="300" height="300"></canvas><div class="d-pad" dir="ltr"><div></div><button class="d-up" onmousedown="changeDir(0, -1)" ontouchstart="changeDir(0, -1)">▲</button><div></div><button class="d-left" onmousedown="changeDir(-1, 0)" ontouchstart="changeDir(-1, 0)">◀</button><button class="d-down" onmousedown="changeDir(0, 1)" ontouchstart="changeDir(0, 1)">▼</button><button class="d-right" onmousedown="changeDir(1, 0)" ontouchstart="changeDir(1, 0)">▶</button></div><div style="padding: 0 20px;"><button class="btn-primary" onclick="startSnakeGame()">ابدأ اللعب</button></div></div>
         </div>
 
         <nav class="bottom-nav">
@@ -231,34 +211,200 @@
     </div>
 
     <script>
-        // =========================================================
-        // ⚠️ ضع مفاتيح فايربيز الخاصة بك هنا ⚠️
-        // =========================================================
+        // =========================================================================
+        // 🚨 انسخ المفاتيح الخاصة بك من فايربيز والصقها مكان هذا الكود بالضبط 🚨
+        // =========================================================================
         const firebaseConfig = {
-            // امسح هيدا السطر والصق الكود تبعك اللي بيبدأ بكلمة apiKey
+            apiKey: "ضع_الكود_هنا",
+            authDomain: "ضع_الكود_هنا",
+            databaseURL: "ضع_الكود_هنا", // تأكد من وجود رابط قاعدة البيانات
+            projectId: "ضع_الكود_هنا",
+            storageBucket: "ضع_الكود_هنا",
+            messagingSenderId: "ضع_الكود_هنا",
+            appId: "ضع_الكود_هنا"
         };
-        // =========================================================
+        // =========================================================================
         
-        // تشغيل فايربيز
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+        let db;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.database();
+        } catch(e) {
+            console.log("الرجاء وضع مفاتيح Firebase الصحيحة.");
+        }
+
+        let myCleanUsername = ""; 
+        let currentChatFriend = "";
+        let chatListener = null;
 
         window.onload = function() {
             let savedName = localStorage.getItem("appUserName");
             let savedHandle = localStorage.getItem("appUserHandle");
             let savedPic = localStorage.getItem("appUserPic");
+            
             if (savedName) document.getElementById("userNameInput").value = savedName;
             if (savedHandle) document.getElementById("userHandleInput").value = savedHandle;
             if (savedPic) document.getElementById("userProfileImage").src = savedPic;
+            
             getWeather(); 
-            listenForMessages(); // تشغيل استقبال الرسائل
+            registerUserInDatabase(); // تسجيل الدخول لقاعدة البيانات
+            loadFriends(); // تحميل الأصدقاء
         };
 
+        // --- نظام تسجيل اليوزرنيم في قاعدة البيانات ---
         function saveProfile() {
             localStorage.setItem("appUserName", document.getElementById("userNameInput").value);
             localStorage.setItem("appUserHandle", document.getElementById("userHandleInput").value);
+            registerUserInDatabase();
         }
 
+        function registerUserInDatabase() {
+            if(!db) return;
+            let handle = document.getElementById("userHandleInput").value;
+            let name = document.getElementById("userNameInput").value;
+            myCleanUsername = handle.replace('@', '').trim().toLowerCase(); // تنظيف اليوزرنيم
+            
+            if(myCleanUsername.length > 2) {
+                db.ref("users/" + myCleanUsername).set({
+                    displayName: name,
+                    lastSeen: new Date().toISOString()
+                });
+            }
+        }
+
+        // --- نظام إضافة الأصدقاء ---
+        function addFriend() {
+            if(!db) return alert("تأكد من إدخال مفاتيح Firebase");
+            if(myCleanUsername.length < 3) return alert("الرجاء كتابة يوزرنيم خاص بك في الصفحة الرئيسية أولاً!");
+            
+            let friendInput = document.getElementById("addFriendInput").value.replace('@', '').trim().toLowerCase();
+            let statusMsg = document.getElementById("friendStatusMsg");
+            
+            if(friendInput === myCleanUsername) { statusMsg.innerText = "لا يمكنك إضافة نفسك!"; return; }
+            if(friendInput === "") return;
+
+            statusMsg.innerText = "جاري البحث...";
+            
+            // البحث عن اليوزرنيم في قاعدة البيانات
+            db.ref("users/" + friendInput).once("value").then((snapshot) => {
+                if(snapshot.exists()) {
+                    // إذا كان موجود، نضيفه كصديق
+                    let friendData = snapshot.val();
+                    let myFriends = JSON.parse(localStorage.getItem("myFriendsList") || "{}");
+                    myFriends[friendInput] = friendData.displayName;
+                    localStorage.setItem("myFriendsList", JSON.stringify(myFriends));
+                    
+                    statusMsg.innerText = "تم إضافة " + friendData.displayName + " بنجاح ✅";
+                    document.getElementById("addFriendInput").value = "";
+                    loadFriends();
+                } else {
+                    statusMsg.innerText = "لم يتم العثور على هذا المستخدم ❌";
+                    statusMsg.style.color = "#ef4444";
+                    setTimeout(() => { statusMsg.innerText = ""; statusMsg.style.color = "var(--neon-green)"; }, 3000);
+                }
+            });
+        }
+
+        function loadFriends() {
+            let myFriends = JSON.parse(localStorage.getItem("myFriendsList") || "{}");
+            let listDiv = document.getElementById("myFriendsList");
+            listDiv.innerHTML = "";
+            
+            if(Object.keys(myFriends).length === 0) {
+                listDiv.innerHTML = "<p style='text-align:center; color:var(--text-dim);'>لا يوجد أصدقاء بعد. ابحث عن صديق لإضافته.</p>";
+                return;
+            }
+
+            for (let username in myFriends) {
+                let name = myFriends[username];
+                let firstLetter = name.charAt(0).toUpperCase();
+                
+                let item = document.createElement("div");
+                item.className = "friend-item";
+                item.onclick = () => openChat(username, name);
+                item.innerHTML = `
+                    <div class="friend-info">
+                        <div class="friend-avatar">${firstLetter}</div>
+                        <div>
+                            <strong style="display:block;">${name}</strong>
+                            <span style="font-size:12px; color:var(--text-dim);">@${username}</span>
+                        </div>
+                    </div>
+                    <span style="color:var(--neon-green); font-size:20px;">💬</span>
+                `;
+                listDiv.appendChild(item);
+            }
+        }
+
+        // --- نظام المحادثة الخاصة ---
+        function getChatRoomID(user1, user2) {
+            // دمج اليوزرنيم وترتيبهم أبجدياً لضمان نفس الغرفة للطرفين
+            return [user1, user2].sort().join("_");
+        }
+
+        function openChat(friendUsername, friendName) {
+            document.getElementById("friendsArea").style.display = "none";
+            document.getElementById("privateChatArea").style.display = "flex";
+            
+            currentChatFriend = friendUsername;
+            document.getElementById("chatFriendName").innerText = friendName;
+            document.getElementById("chatAvatar").innerText = friendName.charAt(0).toUpperCase();
+            
+            let chatBox = document.getElementById("chatMessages");
+            chatBox.innerHTML = ""; // مسح الرسائل القديمة من الشاشة
+            
+            let roomID = getChatRoomID(myCleanUsername, friendUsername);
+            
+            // إيقاف أي استماع لغرفة قديمة
+            if(chatListener && db) db.ref("private_chats/" + roomID).off("child_added", chatListener);
+            
+            if(!db) return;
+            
+            // استماع للرسائل في هذه الغرفة الخاصة
+            chatListener = db.ref("private_chats/" + roomID).on("child_added", function(snapshot) {
+                let msg = snapshot.val();
+                let newMsg = document.createElement("div");
+                
+                if (msg.sender === myCleanUsername) {
+                    newMsg.className = "message sent";
+                } else {
+                    newMsg.className = "message received";
+                }
+                
+                newMsg.innerHTML = `<span class="msg-info">${msg.time}</span>${msg.text}`;
+                chatBox.appendChild(newMsg);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            });
+        }
+
+        function closeChat() {
+            document.getElementById("privateChatArea").style.display = "none";
+            document.getElementById("friendsArea").style.display = "block";
+            let roomID = getChatRoomID(myCleanUsername, currentChatFriend);
+            if(chatListener && db) db.ref("private_chats/" + roomID).off("child_added", chatListener);
+            currentChatFriend = "";
+        }
+
+        function sendPrivateMessage() {
+            if(!db || currentChatFriend === "") return;
+            let inputField = document.getElementById("chatInput");
+            let msgText = inputField.value.trim();
+            if(msgText === "") return;
+            
+            let timeNow = new Date();
+            let timeStr = timeNow.getHours() + ":" + (timeNow.getMinutes()<10?'0':'') + timeNow.getMinutes();
+            let roomID = getChatRoomID(myCleanUsername, currentChatFriend);
+            
+            db.ref("private_chats/" + roomID).push({
+                sender: myCleanUsername,
+                text: msgText,
+                time: timeStr
+            });
+            
+            inputField.value = "";
+        }
+
+        // --- باقي الأنظمة كما هي ---
         document.getElementById('imageUpload').addEventListener('change', function(e) {
             if (e.target.files && e.target.files[0]) {
                 let reader = new FileReader();
@@ -271,48 +417,6 @@
             }
         });
 
-        // --- نظام إرسال الرسائل الحقيقي ---
-        function sendRealMessage() {
-            let inputField = document.getElementById("chatInput");
-            let msgText = inputField.value.trim();
-            if(msgText === "") return;
-            
-            let myName = document.getElementById("userNameInput").value || "مستخدم";
-            let timeNow = new Date();
-            let timeStr = timeNow.getHours() + ":" + (timeNow.getMinutes()<10?'0':'') + timeNow.getMinutes();
-            
-            // إرسال الرسالة لقاعدة البيانات
-            db.ref("chat_messages").push({
-                name: myName,
-                text: msgText,
-                time: timeStr
-            });
-            
-            inputField.value = "";
-        }
-
-        // --- نظام استقبال الرسائل الحقيقي ---
-        function listenForMessages() {
-            db.ref("chat_messages").on("child_added", function(snapshot) {
-                let msg = snapshot.val();
-                let myName = document.getElementById("userNameInput").value || "مستخدم";
-                let chatBox = document.getElementById("chatMessages");
-                
-                let newMsg = document.createElement("div");
-                // تحديد إذا كانت الرسالة مني أو من شخص آخر
-                if (msg.name === myName) {
-                    newMsg.className = "message sent";
-                } else {
-                    newMsg.className = "message received";
-                }
-                
-                newMsg.innerHTML = `<span class="msg-info">${msg.name} - ${msg.time}</span>${msg.text}`;
-                chatBox.appendChild(newMsg);
-                chatBox.scrollTop = chatBox.scrollHeight;
-            });
-        }
-
-        // --- باقي الأنظمة كما هي ---
         function getWeather() {
             fetchWeatherByCity("طرابلس");
             if (navigator.geolocation) {
@@ -322,109 +426,44 @@
                 );
             }
         }
-
-        function fetchWeatherData(lat, lon) {
-            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&hourly=relativehumidity_2m,apparent_temperature,windspeed_10m`)
-            .then(res => res.json()).then(data => updateWeatherUI(data, "موقعك الحالي")).catch(e => console.log("استمرار استخدام الموقع الافتراضي"));
-        }
-
-        function fetchWeatherByCity(cityName) {
-            fetch(`https://api.open-meteo.com/v1/forecast?latitude=34.4367&longitude=35.8362&current_weather=true&hourly=relativehumidity_2m,apparent_temperature,windspeed_10m`)
-            .then(res => res.json()).then(data => updateWeatherUI(data, cityName)).catch(e => { document.getElementById("mainCity").innerText = "تعذر الاتصال بالإنترنت"; });
-        }
-
+        function fetchWeatherData(lat, lon) { fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&hourly=relativehumidity_2m,apparent_temperature,windspeed_10m`).then(res => res.json()).then(data => updateWeatherUI(data, "موقعك الحالي")).catch(e => console.log("استمرار استخدام الموقع الافتراضي")); }
+        function fetchWeatherByCity(cityName) { fetch(`https://api.open-meteo.com/v1/forecast?latitude=34.4367&longitude=35.8362&current_weather=true&hourly=relativehumidity_2m,apparent_temperature,windspeed_10m`).then(res => res.json()).then(data => updateWeatherUI(data, cityName)).catch(e => {}); }
         function updateWeatherUI(data, cityName) {
             if(!data || !data.current_weather) return;
-            const temp = Math.round(data.current_weather.temperature);
-            const wind = data.current_weather.windspeed;
-            const code = data.current_weather.weathercode;
-            
-            let icon = "☁️"; let cond = "غائم";
-            if(code === 0) { icon = "☀️"; cond = "صافي"; }
-            else if(code > 0 && code <= 3) { icon = "⛅"; cond = "غائم جزئياً"; }
-            else if(code >= 51 && code <= 67) { icon = "🌧️"; cond = "ممطر"; }
-            else if(code >= 71 && code <= 77) { icon = "❄️"; cond = "مثلج"; }
-            else if(code >= 95) { icon = "⛈️"; cond = "عواصف رعدية"; }
-
-            document.getElementById("mainTemp").innerText = temp + "°";
-            document.getElementById("mainCity").innerText = cond + " في " + cityName;
-            document.getElementById("mainWeatherIcon").innerText = icon;
-            document.getElementById("fullTemp").innerText = temp + "°C";
-            document.getElementById("fullCity").innerText = cityName;
-            document.getElementById("fullCondition").innerText = cond;
-            document.getElementById("fullWeatherIcon").innerText = icon;
-            document.getElementById("wWind").innerText = wind + " km/h";
-            if(data.hourly && data.hourly.relativehumidity_2m) {
-                document.getElementById("wHumidity").innerText = data.hourly.relativehumidity_2m[0] + "%";
-                document.getElementById("wFeels").innerText = Math.round(data.hourly.apparent_temperature[0]) + "°C";
-            }
+            const temp = Math.round(data.current_weather.temperature), wind = data.current_weather.windspeed, code = data.current_weather.weathercode;
+            let icon = "☁️", cond = "غائم";
+            if(code === 0) { icon = "☀️"; cond = "صافي"; } else if(code > 0 && code <= 3) { icon = "⛅"; cond = "غائم جزئياً"; } else if(code >= 51 && code <= 67) { icon = "🌧️"; cond = "ممطر"; } else if(code >= 71 && code <= 77) { icon = "❄️"; cond = "مثلج"; } else if(code >= 95) { icon = "⛈️"; cond = "عواصف رعدية"; }
+            document.getElementById("mainTemp").innerText = temp + "°"; document.getElementById("mainCity").innerText = cond + " في " + cityName; document.getElementById("mainWeatherIcon").innerText = icon;
+            document.getElementById("fullTemp").innerText = temp + "°C"; document.getElementById("fullCity").innerText = cityName; document.getElementById("fullCondition").innerText = cond; document.getElementById("fullWeatherIcon").innerText = icon; document.getElementById("wWind").innerText = wind + " km/h";
+            if(data.hourly && data.hourly.relativehumidity_2m) { document.getElementById("wHumidity").innerText = data.hourly.relativehumidity_2m[0] + "%"; document.getElementById("wFeels").innerText = Math.round(data.hourly.apparent_temperature[0]) + "°C"; }
         }
 
         function switchMainTab(tab) {
-            ['home', 'prayer', 'adhkar', 'chat', 'games', 'weather'].forEach(t => {
-                let sec = document.getElementById(t + 'Section');
-                if(sec) sec.style.display = 'none';
-            });
+            ['home', 'prayer', 'adhkar', 'chat', 'games', 'weather'].forEach(t => { let sec = document.getElementById(t + 'Section'); if(sec) sec.style.display = 'none'; });
             document.getElementById(tab + 'Section').style.display = 'block';
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            
             if(tab === 'home' || tab === 'weather') document.getElementById('navHome').classList.add('active'); 
             if(tab === 'prayer') document.getElementById('navPrayer').classList.add('active');
             if(tab === 'adhkar') document.getElementById('navAdhkar').classList.add('active');
-            if(tab === 'chat') document.getElementById('navChat').classList.add('active');
+            if(tab === 'chat') { document.getElementById('navChat').classList.add('active'); if(currentChatFriend === "") { document.getElementById("friendsArea").style.display = "block"; document.getElementById("privateChatArea").style.display = "none"; } }
             if(tab === 'games') document.getElementById('navGames').classList.add('active');
         }
 
-        function switchGameTab(game) {
-            document.getElementById('xoContainer').style.display = game === 'xo' ? 'block' : 'none';
-            document.getElementById('snakeContainer').style.display = game === 'snake' ? 'block' : 'none';
-            document.getElementById('btnTicTacToe').style.background = game === 'xo' ? 'var(--neon-green)' : 'var(--bg-card)';
-            document.getElementById('btnTicTacToe').style.color = game === 'xo' ? '#000' : 'var(--text-light)';
-            document.getElementById('btnSnakeGame').style.background = game === 'snake' ? 'var(--neon-green)' : 'var(--bg-card)';
-            document.getElementById('btnSnakeGame').style.color = game === 'snake' ? '#000' : 'var(--text-light)';
-        }
-
+        function switchGameTab(game) { document.getElementById('xoContainer').style.display = game === 'xo' ? 'block' : 'none'; document.getElementById('snakeContainer').style.display = game === 'snake' ? 'block' : 'none'; document.getElementById('btnTicTacToe').style.background = game === 'xo' ? 'var(--neon-green)' : 'var(--bg-card)'; document.getElementById('btnTicTacToe').style.color = game === 'xo' ? '#000' : 'var(--text-light)'; document.getElementById('btnSnakeGame').style.background = game === 'snake' ? 'var(--neon-green)' : 'var(--bg-card)'; document.getElementById('btnSnakeGame').style.color = game === 'snake' ? '#000' : 'var(--text-light)'; }
         function requestNotificationPermission() { if ("Notification" in window && Notification.permission !== "granted") Notification.requestPermission(); }
-
-        let alarmAudio = document.getElementById("alarmSound");
-        let adhanAudio = document.getElementById("adhanAudio");
-        
-        function triggerAlarm(title, messageText, isAdhan = false) {
-            document.getElementById("alarmTitle").innerText = title; document.getElementById("alarmMessageText").innerText = messageText; document.getElementById("alarmModal").style.display = "flex";
-            if(isAdhan) { adhanAudio.src = document.getElementById("adhanSoundSelect").value; adhanAudio.play(); } else { alarmAudio.play(); }
-            if ("Notification" in window && Notification.permission === "granted") new Notification(title, { body: messageText });
-        }
+        let alarmAudio = document.getElementById("alarmSound"), adhanAudio = document.getElementById("adhanAudio");
+        function triggerAlarm(title, messageText, isAdhan = false) { document.getElementById("alarmTitle").innerText = title; document.getElementById("alarmMessageText").innerText = messageText; document.getElementById("alarmModal").style.display = "flex"; if(isAdhan) { adhanAudio.src = document.getElementById("adhanSoundSelect").value; adhanAudio.play(); } else { alarmAudio.play(); } if ("Notification" in window && Notification.permission === "granted") new Notification(title, { body: messageText }); }
         function stopAlarm() { alarmAudio.pause(); alarmAudio.currentTime = 0; adhanAudio.pause(); adhanAudio.currentTime = 0; document.getElementById("alarmModal").style.display = "none"; }
 
         let prayerTimings = {};
-        function activatePrayerTimes() {
-            requestNotificationPermission(); adhanAudio.src = document.getElementById("adhanSoundSelect").value; adhanAudio.play().then(() => { adhanAudio.pause(); adhanAudio.currentTime = 0; }).catch(e => {});
-            document.getElementById("prayerStatus").innerText = "جاري جلب الأوقات... ⚡";
-            fetch(`https://api.aladhan.com/v1/timingsByCity?city=Tripoli&country=Lebanon&method=8`).then(res => res.json()).then(data => displayPrayerTimes(data.data.timings)).catch(e => { document.getElementById("prayerStatus").innerText = "فشل الاتصال"; });
-        }
-        function displayPrayerTimes(timings) {
-            prayerTimings = timings; document.getElementById("prayerStatus").innerText = "تم التفعيل ✔️";
-            document.getElementById("prayerTimesList").innerHTML = `<div class="task-card"><span class="task-title">الفجر</span> <span class="task-badge">${timings.Fajr}</span></div><div class="task-card"><span class="task-title">الظهر</span> <span class="task-badge">${timings.Dhuhr}</span></div><div class="task-card"><span class="task-title">العصر</span> <span class="task-badge">${timings.Asr}</span></div><div class="task-card"><span class="task-title">المغرب</span> <span class="task-badge">${timings.Maghrib}</span></div><div class="task-card"><span class="task-title">العشاء</span> <span class="task-badge">${timings.Isha}</span></div>`;
-        }
+        function activatePrayerTimes() { requestNotificationPermission(); adhanAudio.src = document.getElementById("adhanSoundSelect").value; adhanAudio.play().then(() => { adhanAudio.pause(); adhanAudio.currentTime = 0; }).catch(e => {}); document.getElementById("prayerStatus").innerText = "جاري جلب الأوقات... ⚡"; fetch(`https://api.aladhan.com/v1/timingsByCity?city=Tripoli&country=Lebanon&method=8`).then(res => res.json()).then(data => displayPrayerTimes(data.data.timings)).catch(e => { document.getElementById("prayerStatus").innerText = "فشل الاتصال"; }); }
+        function displayPrayerTimes(timings) { prayerTimings = timings; document.getElementById("prayerStatus").innerText = "تم التفعيل ✔️"; document.getElementById("prayerTimesList").innerHTML = `<div class="task-card"><span class="task-title">الفجر</span> <span class="task-badge">${timings.Fajr}</span></div><div class="task-card"><span class="task-title">الظهر</span> <span class="task-badge">${timings.Dhuhr}</span></div><div class="task-card"><span class="task-title">العصر</span> <span class="task-badge">${timings.Asr}</span></div><div class="task-card"><span class="task-title">المغرب</span> <span class="task-badge">${timings.Maghrib}</span></div><div class="task-card"><span class="task-title">العشاء</span> <span class="task-badge">${timings.Isha}</span></div>`; }
 
         let adhkarIntervalId = null; const randomAdhkar = ["أستغفر الله وأتوب إليه 🌸", "سبحان الله وبحمده ✨", "لا إله إلا أنت سبحانك 🤲", "اللهم صلِ على محمد 📿"];
-        function startAdhkarTimer() {
-            requestNotificationPermission(); let minutes = parseFloat(document.getElementById("adhkarInterval").value);
-            if(adhkarIntervalId) clearInterval(adhkarIntervalId);
-            if (minutes === 0) { document.getElementById("adhkarStatus").innerText = "متوقف"; return; }
-            document.getElementById("adhkarStatus").innerText = "نشط كل " + minutes + " دقيقة";
-            alarmAudio.play().then(() => { alarmAudio.pause(); }).catch(e => {});
-            adhkarIntervalId = setInterval(() => { triggerAlarm("وقت الذكر 📿", randomAdhkar[Math.floor(Math.random() * randomAdhkar.length)], false); }, minutes * 60 * 1000);
-        }
+        function startAdhkarTimer() { requestNotificationPermission(); let minutes = parseFloat(document.getElementById("adhkarInterval").value); if(adhkarIntervalId) clearInterval(adhkarIntervalId); if (minutes === 0) { document.getElementById("adhkarStatus").innerText = "متوقف"; return; } document.getElementById("adhkarStatus").innerText = "نشط كل " + minutes + " دقيقة"; alarmAudio.play().then(() => { alarmAudio.pause(); }).catch(e => {}); adhkarIntervalId = setInterval(() => { triggerAlarm("وقت الذكر 📿", randomAdhkar[Math.floor(Math.random() * randomAdhkar.length)], false); }, minutes * 60 * 1000); }
 
         let currentPlayer = "X", scoreX = 0, scoreO = 0, boardState = ["", "", "", "", "", "", "", "", ""], xoActive = true; const winCond = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
-        function playXO(cell, index) {
-            if(boardState[index] !== "" || !xoActive) return;
-            boardState[index] = currentPlayer; cell.innerText = currentPlayer; cell.style.color = currentPlayer === "X" ? "var(--neon-green)" : "#ef4444";
-            let won = false; for(let i=0; i<winCond.length; i++) { const [a,b,c] = winCond[i]; if(boardState[a] && boardState[a]===boardState[b] && boardState[a]===boardState[c]) won = true; }
-            if(won) { currentPlayer === "X" ? scoreX++ : scoreO++; document.getElementById("scoreX").innerText = "X: " + scoreX; document.getElementById("scoreO").innerText = "O: " + scoreO; setTimeout(() => alert("فاز " + currentPlayer), 50); xoActive = false; return; }
-            currentPlayer = currentPlayer === "X" ? "O" : "X";
-        }
+        function playXO(cell, index) { if(boardState[index] !== "" || !xoActive) return; boardState[index] = currentPlayer; cell.innerText = currentPlayer; cell.style.color = currentPlayer === "X" ? "var(--neon-green)" : "#ef4444"; let won = false; for(let i=0; i<winCond.length; i++) { const [a,b,c] = winCond[i]; if(boardState[a] && boardState[a]===boardState[b] && boardState[a]===boardState[c]) won = true; } if(won) { currentPlayer === "X" ? scoreX++ : scoreO++; document.getElementById("scoreX").innerText = "X: " + scoreX; document.getElementById("scoreO").innerText = "O: " + scoreO; setTimeout(() => alert("فاز " + currentPlayer), 50); xoActive = false; return; } currentPlayer = currentPlayer === "X" ? "O" : "X"; }
         function resetXO() { boardState = ["","","","","","","","",""]; xoActive = true; currentPlayer = "X"; document.querySelectorAll('.cell').forEach(c => c.innerText = ""); }
 
         let sCanvas = document.getElementById("snakeCanvas"), sCtx = sCanvas.getContext("2d"), box = 15, snake = [], snakeDir = {x:0,y:0}, nextDir = {x:0,y:0}, food = {x:0,y:0}, sScore = 0, sGameActive = false, sInterval;
@@ -432,12 +471,10 @@
         function spawnFood() { food = { x: Math.floor(Math.random()*20)*box, y: Math.floor(Math.random()*20)*box }; }
         function changeDir(dx, dy) { if(sGameActive && (dx*box !== -snakeDir.x || dy*box !== -snakeDir.y)) nextDir = {x: dx*box, y: dy*box}; }
         function drawSnake() {
-            sCtx.fillStyle = "#000"; sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
-            snakeDir = nextDir; let sX = snake[0].x + snakeDir.x, sY = snake[0].y + snakeDir.y;
+            sCtx.fillStyle = "#000"; sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height); snakeDir = nextDir; let sX = snake[0].x + snakeDir.x, sY = snake[0].y + snakeDir.y;
             if(sX < 0 || sX >= sCanvas.width || sY < 0 || sY >= sCanvas.height || snake.some(s => s.x===sX && s.y===sY)) { clearInterval(sInterval); sGameActive = false; return alert("انتهت اللعبة!"); }
             if(sX === food.x && sY === food.y) { sScore += 10; document.getElementById("snakeScoreText").innerText = "النتيجة: " + sScore; spawnFood(); } else { snake.pop(); }
-            snake.unshift({x: sX, y: sY}); sCtx.fillStyle = "#ef4444"; sCtx.fillRect(food.x, food.y, box, box);
-            snake.forEach((s, i) => { sCtx.fillStyle = i===0 ? "#9fff24" : "#fff"; sCtx.fillRect(s.x, s.y, box, box); });
+            snake.unshift({x: sX, y: sY}); sCtx.fillStyle = "#ef4444"; sCtx.fillRect(food.x, food.y, box, box); snake.forEach((s, i) => { sCtx.fillStyle = i===0 ? "#9fff24" : "#fff"; sCtx.fillRect(s.x, s.y, box, box); });
         }
     </script>
 </body>
