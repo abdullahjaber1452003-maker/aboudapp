@@ -115,7 +115,7 @@
                     <img id="userProfileImage" class="profile-pic" src="https://via.placeholder.com/100/1a1a1a/888888?text=+" alt="صورة المستخدم">
                 </div>
                 <input type="text" id="userNameInput" class="profile-name" value="اسم المستخدم" onkeyup="saveProfile()">
-                <input type="text" id="userHandleInput" class="profile-handle" value="@username" placeholder="@username" onkeyup="saveProfile()">
+                <input type="text" id="userHandleInput" class="profile-handle" value="" placeholder="اكتب هنا يوزرنيم لك مثل @abdullah" onkeyup="saveProfile()">
                 <p style="color:var(--text-dim); font-size:11px;">اليوزرنيم (@) هو اللي رح يخلي أصدقاءك يضيفوك</p>
             </div>
 
@@ -212,16 +212,17 @@
 
     <script>
         // =========================================================================
-        // 🚨 انسخ المفاتيح الخاصة بك من فايربيز والصقها مكان هذا الكود بالضبط 🚨
+        // مفاتيح قاعدة البيانات الخاصة بك (مدمجة وجاهزة!)
         // =========================================================================
         const firebaseConfig = {
-            apiKey: "ضع_الكود_هنا",
-            authDomain: "ضع_الكود_هنا",
-            databaseURL: "ضع_الكود_هنا", // تأكد من وجود رابط قاعدة البيانات
-            projectId: "ضع_الكود_هنا",
-            storageBucket: "ضع_الكود_هنا",
-            messagingSenderId: "ضع_الكود_هنا",
-            appId: "ضع_الكود_هنا"
+            apiKey: "AIzaSyBwmR06WCEjDYWbkGyGcGnUEHGUmlJq_qo",
+            authDomain: "aboud-app.firebaseapp.com",
+            databaseURL: "https://aboud-app-default-rtdb.firebaseio.com", // مضاف لضمان الاتصال
+            projectId: "aboud-app",
+            storageBucket: "aboud-app.firebasestorage.app",
+            messagingSenderId: "637585210220",
+            appId: "1:637585210220:web:d38d9e54f9140b684b1149",
+            measurementId: "G-G82ETCTELK"
         };
         // =========================================================================
         
@@ -230,7 +231,7 @@
             firebase.initializeApp(firebaseConfig);
             db = firebase.database();
         } catch(e) {
-            console.log("الرجاء وضع مفاتيح Firebase الصحيحة.");
+            console.log("حدث خطأ في الاتصال بقاعدة البيانات.");
         }
 
         let myCleanUsername = ""; 
@@ -247,11 +248,10 @@
             if (savedPic) document.getElementById("userProfileImage").src = savedPic;
             
             getWeather(); 
-            registerUserInDatabase(); // تسجيل الدخول لقاعدة البيانات
-            loadFriends(); // تحميل الأصدقاء
+            registerUserInDatabase(); 
+            loadFriends(); 
         };
 
-        // --- نظام تسجيل اليوزرنيم في قاعدة البيانات ---
         function saveProfile() {
             localStorage.setItem("appUserName", document.getElementById("userNameInput").value);
             localStorage.setItem("appUserHandle", document.getElementById("userHandleInput").value);
@@ -262,9 +262,11 @@
             if(!db) return;
             let handle = document.getElementById("userHandleInput").value;
             let name = document.getElementById("userNameInput").value;
-            myCleanUsername = handle.replace('@', '').trim().toLowerCase(); // تنظيف اليوزرنيم
+            if(!handle) return;
             
-            if(myCleanUsername.length > 2) {
+            myCleanUsername = handle.replace('@', '').trim().toLowerCase(); 
+            
+            if(myCleanUsername.length >= 2) {
                 db.ref("users/" + myCleanUsername).set({
                     displayName: name,
                     lastSeen: new Date().toISOString()
@@ -272,10 +274,13 @@
             }
         }
 
-        // --- نظام إضافة الأصدقاء ---
         function addFriend() {
-            if(!db) return alert("تأكد من إدخال مفاتيح Firebase");
-            if(myCleanUsername.length < 3) return alert("الرجاء كتابة يوزرنيم خاص بك في الصفحة الرئيسية أولاً!");
+            if(!db) return alert("تأكد من إعداد قاعدة البيانات!");
+            
+            // التأكد من أن المستخدم وضع يوزرنيم لنفسه أولاً
+            if(!myCleanUsername || myCleanUsername.length < 2) {
+                return alert("الرجاء كتابة يوزرنيم خاص بك (مثال: @abdullah) في الصفحة الرئيسية أولاً لتتمكن من إضافة أصدقاء!");
+            }
             
             let friendInput = document.getElementById("addFriendInput").value.replace('@', '').trim().toLowerCase();
             let statusMsg = document.getElementById("friendStatusMsg");
@@ -285,13 +290,11 @@
 
             statusMsg.innerText = "جاري البحث...";
             
-            // البحث عن اليوزرنيم في قاعدة البيانات
             db.ref("users/" + friendInput).once("value").then((snapshot) => {
                 if(snapshot.exists()) {
-                    // إذا كان موجود، نضيفه كصديق
                     let friendData = snapshot.val();
                     let myFriends = JSON.parse(localStorage.getItem("myFriendsList") || "{}");
-                    myFriends[friendInput] = friendData.displayName;
+                    myFriends[friendInput] = friendData.displayName || friendInput;
                     localStorage.setItem("myFriendsList", JSON.stringify(myFriends));
                     
                     statusMsg.innerText = "تم إضافة " + friendData.displayName + " بنجاح ✅";
@@ -336,9 +339,7 @@
             }
         }
 
-        // --- نظام المحادثة الخاصة ---
         function getChatRoomID(user1, user2) {
-            // دمج اليوزرنيم وترتيبهم أبجدياً لضمان نفس الغرفة للطرفين
             return [user1, user2].sort().join("_");
         }
 
@@ -351,16 +352,14 @@
             document.getElementById("chatAvatar").innerText = friendName.charAt(0).toUpperCase();
             
             let chatBox = document.getElementById("chatMessages");
-            chatBox.innerHTML = ""; // مسح الرسائل القديمة من الشاشة
+            chatBox.innerHTML = ""; 
             
             let roomID = getChatRoomID(myCleanUsername, friendUsername);
             
-            // إيقاف أي استماع لغرفة قديمة
             if(chatListener && db) db.ref("private_chats/" + roomID).off("child_added", chatListener);
             
             if(!db) return;
             
-            // استماع للرسائل في هذه الغرفة الخاصة
             chatListener = db.ref("private_chats/" + roomID).on("child_added", function(snapshot) {
                 let msg = snapshot.val();
                 let newMsg = document.createElement("div");
@@ -404,7 +403,6 @@
             inputField.value = "";
         }
 
-        // --- باقي الأنظمة كما هي ---
         document.getElementById('imageUpload').addEventListener('change', function(e) {
             if (e.target.files && e.target.files[0]) {
                 let reader = new FileReader();
