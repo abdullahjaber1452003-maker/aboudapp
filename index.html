@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>تطبيق عبد الله</title>
+    <!-- مكتبات فايربيز لقاعدة البيانات -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     
@@ -18,7 +19,7 @@
 
         .header-top { display: flex; justify-content: space-between; padding: 20px; color: var(--text-dim); }
         .profile-section { text-align: center; padding: 10px 20px; }
-        .profile-pic-wrapper { position: relative; width: 100px; height: 100px; margin: 0 auto 15px; border-radius: 50%; border: 2px dashed var(--text-dim); padding: 5px; cursor: pointer; }
+        .profile-pic-wrapper { position: relative; width: 100px; height: 100px; margin: 0 auto 15px; border-radius: 50%; border: 2px dashed var(--text-dim); padding: 5px; cursor: pointer; overflow: hidden; }
         .profile-pic { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background-color: var(--bg-card); }
         .profile-name { background: transparent; border: none; color: var(--text-light); font-size: 24px; font-weight: bold; text-align: center; width: 100%; outline: none; }
         .profile-handle { background: transparent; border: none; color: var(--text-dim); font-size: 14px; text-align: center; width: 100%; outline: none; margin-top: 5px; }
@@ -61,17 +62,23 @@
         .friend-item { background: var(--bg-card); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; cursor: pointer;}
         .friend-item:active { background: #333; }
         .friend-info { display: flex; align-items: center; gap: 10px; }
-        .friend-avatar { width: 40px; height: 40px; background: var(--border-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--neon-green);}
+        .friend-avatar { width: 45px; height: 45px; background: var(--border-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--neon-green); overflow: hidden; flex-shrink: 0;}
         
-        /* واجهة الدردشة الخاصة */
         #privateChatArea { display: none; flex-direction: column; height: 100%; }
         .chat-header { background: var(--bg-card); padding: 15px; border-radius: 15px; display: flex; align-items: center; gap: 15px; margin-bottom: 10px; border: 1px solid var(--border-color);}
         .back-btn { background: none; border: none; color: var(--neon-green); font-size: 24px; cursor: pointer; padding: 0; }
         .chat-box { flex: 1; background: var(--bg-card); border-radius: 15px; border: 1px solid var(--border-color); padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px;}
-        .message { max-width: 75%; padding: 12px 15px; border-radius: 20px; font-size: 14px; line-height: 1.4; word-wrap: break-word;}
-        .message.sent { background: var(--neon-green); color: #000; align-self: flex-start; border-top-right-radius: 5px;}
-        .message.received { background: #333; color: white; align-self: flex-end; border-top-left-radius: 5px;}
-        .msg-info { font-size: 10px; opacity: 0.6; margin-bottom: 5px; display: block; }
+        
+        /* شكل رسائل الشات الجديد (مع صورة الصديق) */
+        .msg-wrapper { display: flex; gap: 8px; align-items: flex-end; width: 100%; margin-bottom: 5px; }
+        .msg-wrapper.sent { justify-content: flex-start; flex-direction: row-reverse; }
+        .msg-wrapper.received { justify-content: flex-start; }
+        .msg-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: var(--neon-green); overflow: hidden; flex-shrink: 0;}
+        .msg-bubble { max-width: 75%; padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.4; word-wrap: break-word;}
+        .msg-bubble.sent { background: var(--neon-green); color: #000; border-bottom-right-radius: 4px;}
+        .msg-bubble.received { background: #333; color: white; border-bottom-left-radius: 4px;}
+        .msg-info { font-size: 10px; opacity: 0.6; margin-bottom: 4px; display: block; color: inherit; }
+        
         .chat-input-area { display: flex; gap: 10px; }
         .chat-input-area input { margin-bottom: 0; border-radius: 25px; }
         .chat-input-area button { width: 60px; border-radius: 25px; font-size: 20px; display:flex; align-items:center; justify-content:center;}
@@ -130,7 +137,6 @@
             <div class="developer-card"><h4>تصميم وتطوير</h4><h3>عبد الله</h3></div>
         </div>
 
-        <!-- قسم الشات -->
         <div id="chatSection" style="display: none;">
             <div class="section-header">الأصدقاء 💬</div>
             <div class="chat-container">
@@ -191,15 +197,13 @@
         </nav>
     </div>
 
-    <!-- ملف صوتي مخصص لإشعار الشات -->
+    <!-- الإشعارات الصوتية -->
     <audio id="chatNotificationSound" src="https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3" preload="auto"></audio>
     <audio id="alarmSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" loop preload="auto"></audio>
     <audio id="adhanAudio" src="" preload="auto"></audio>
 
     <script>
-        // =========================================================================
-        // 🚨 ضع الكود الخاص بك هنا مجدداً 🚨
-        // =========================================================================
+        // مفاتيح قاعدة البيانات الخاصة بك
         const firebaseConfig = {
             apiKey: "AIzaSyBwmR06WCEjDYWbkGyGcGnUEHGUmlJq_qo",
             authDomain: "aboud-app.firebaseapp.com",
@@ -210,7 +214,6 @@
             appId: "1:637585210220:web:d38d9e54f9140b684b1149",
             measurementId: "G-G82ETCTELK"
         };
-        // =========================================================================
         
         let db;
         try {
@@ -222,7 +225,7 @@
         let currentChatFriend = "";
         let chatListener = null;
         let globalNotifListener = null;
-        let appStartTime = Date.now(); // لحفظ وقت فتح التطبيق حتى لا نرسل إشعارات لرسائل قديمة
+        let appStartTime = Date.now();
 
         window.onload = function() {
             let savedName = localStorage.getItem("appUserName");
@@ -236,38 +239,30 @@
             getWeather(); 
             registerUserInDatabase(); 
             loadFriends(); 
-            requestNotificationPermission(); // طلب صلاحية الإشعارات أول ما يفتح التطبيق
+            requestNotificationPermission(); 
         };
 
         // --- نظام إشعارات الشات ---
         function triggerChatNotification(sender, text) {
-            // إظهار إشعار من نظام الهاتف
             if ("Notification" in window && Notification.permission === "granted") {
-                new Notification("رسالة جديدة من @" + sender, { body: text, icon: 'https://cdn-icons-png.flaticon.com/512/134/134718.png' });
+                new Notification("رسالة من @" + sender, { body: text, icon: 'https://cdn-icons-png.flaticon.com/512/134/134718.png' });
             }
-            // تشغيل صوت تنبيه قصير
-            let chatSound = document.getElementById("chatNotificationSound");
-            chatSound.play().catch(e => {});
+            document.getElementById("chatNotificationSound").play().catch(e => {});
         }
 
         function listenForGlobalNotifications() {
-            if(!db || !myCleanUsername) return;
-            if(globalNotifListener) return; // منع التكرار
+            if(!db || !myCleanUsername || globalNotifListener) return;
             
-            let notifRef = db.ref("notifications/" + myCleanUsername);
-            globalNotifListener = notifRef.on("child_added", function(snapshot) {
+            globalNotifListener = db.ref("notifications/" + myCleanUsername).on("child_added", function(snapshot) {
                 let notif = snapshot.val();
-                
-                // شرط: الرسالة جديدة + الشخص اللي بعت الرسالة مش هو نفسه اللي فاتحين محادثته حالياً
                 if(notif.timeAdded > appStartTime && currentChatFriend !== notif.sender) {
                     triggerChatNotification(notif.sender, notif.text);
                 }
-                
-                // مسح الإشعار من الداتا بيز بعد قراءته لتخفيف الضغط على السيرفر
                 snapshot.ref.remove();
             });
         }
 
+        // --- نظام حفظ البيانات و الصورة ---
         function saveProfile() {
             localStorage.setItem("appUserName", document.getElementById("userNameInput").value);
             localStorage.setItem("appUserHandle", document.getElementById("userHandleInput").value);
@@ -278,20 +273,49 @@
             if(!db) return;
             let handle = document.getElementById("userHandleInput").value;
             let name = document.getElementById("userNameInput").value;
-            if(!handle) return;
+            let pic = localStorage.getItem("appUserPic") || "";
             
+            if(!handle) return;
             myCleanUsername = handle.replace('@', '').trim().toLowerCase(); 
             
             if(myCleanUsername.length >= 2) {
-                db.ref("users/" + myCleanUsername).set({
+                db.ref("users/" + myCleanUsername).update({
                     displayName: name,
+                    profilePic: pic,
                     lastSeen: new Date().toISOString()
                 });
-                requestNotificationPermission(); // نطلب الصلاحية مجدداً لتأكيدها
-                listenForGlobalNotifications(); // بدء استقبال الإشعارات
+                requestNotificationPermission(); 
+                listenForGlobalNotifications(); 
             }
         }
 
+        document.getElementById('imageUpload').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                let reader = new FileReader();
+                reader.onload = function(event) {
+                    let img = new Image();
+                    img.onload = function() {
+                        let canvas = document.createElement("canvas");
+                        let ctx = canvas.getContext("2d");
+                        let maxW = 200, maxH = 200;
+                        let w = img.width, h = img.height;
+                        if(w > h) { if(w > maxW) { h *= maxW / w; w = maxW; } }
+                        else { if(h > maxH) { w *= maxH / h; h = maxH; } }
+                        canvas.width = w; canvas.height = h;
+                        ctx.drawImage(img, 0, 0, w, h);
+                        let dataUrl = canvas.toDataURL("image/jpeg", 0.7);
+                        
+                        document.getElementById("userProfileImage").src = dataUrl;
+                        localStorage.setItem("appUserPic", dataUrl);
+                        registerUserInDatabase(); 
+                    }
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        // --- نظام الأصدقاء ---
         function addFriend() {
             if(!db) return alert("تأكد من إعداد قاعدة البيانات!");
             if(!myCleanUsername || myCleanUsername.length < 2) return alert("اكتب يوزرنيم لك في الرئيسية أولاً!");
@@ -300,13 +324,17 @@
             if(friendInput === myCleanUsername) { statusMsg.innerText = "لا يمكنك إضافة نفسك!"; return; }
             if(friendInput === "") return;
             statusMsg.innerText = "جاري البحث...";
+            
             db.ref("users/" + friendInput).once("value").then((snapshot) => {
                 if(snapshot.exists()) {
                     let friendData = snapshot.val();
                     let myFriends = JSON.parse(localStorage.getItem("myFriendsList") || "{}");
-                    myFriends[friendInput] = friendData.displayName || friendInput;
+                    myFriends[friendInput] = {
+                        name: friendData.displayName || friendInput,
+                        pic: friendData.profilePic || ""
+                    };
                     localStorage.setItem("myFriendsList", JSON.stringify(myFriends));
-                    statusMsg.innerText = "تم إضافة " + friendData.displayName + " بنجاح ✅";
+                    statusMsg.innerText = "تم إضافة " + (friendData.displayName || friendInput) + " بنجاح ✅";
                     document.getElementById("addFriendInput").value = "";
                     loadFriends();
                 } else {
@@ -321,23 +349,60 @@
             let myFriends = JSON.parse(localStorage.getItem("myFriendsList") || "{}");
             let listDiv = document.getElementById("myFriendsList");
             listDiv.innerHTML = "";
+            
             if(Object.keys(myFriends).length === 0) { listDiv.innerHTML = "<p style='text-align:center; color:var(--text-dim);'>لا يوجد أصدقاء بعد. ابحث عن صديق لإضافته.</p>"; return; }
+            
             for (let username in myFriends) {
-                let name = myFriends[username]; let firstLetter = name.charAt(0).toUpperCase();
-                let item = document.createElement("div"); item.className = "friend-item"; item.onclick = () => openChat(username, name);
-                item.innerHTML = `<div class="friend-info"><div class="friend-avatar">${firstLetter}</div><div><strong style="display:block;">${name}</strong><span style="font-size:12px; color:var(--text-dim);">@${username}</span></div></div><span style="color:var(--neon-green); font-size:20px;">💬</span>`;
+                let friendObj = myFriends[username];
+                let name = typeof friendObj === 'string' ? friendObj : friendObj.name;
+                let pic = typeof friendObj === 'string' ? "" : friendObj.pic;
+                let firstLetter = name.charAt(0).toUpperCase();
+                let avatarHTML = pic ? `<img src="${pic}" style="width:100%; height:100%; object-fit:cover;">` : firstLetter;
+
+                let item = document.createElement("div"); 
+                item.className = "friend-item"; 
+                item.id = "friend-card-" + username;
+                item.onclick = () => openChat(username, name, pic);
+                
+                item.innerHTML = `
+                    <div class="friend-info">
+                        <div class="friend-avatar" id="avatar-${username}">${avatarHTML}</div>
+                        <div>
+                            <strong style="display:block;">${name}</strong>
+                            <span style="font-size:12px; color:var(--text-dim);">@${username}</span>
+                        </div>
+                    </div>
+                    <span style="color:var(--neon-green); font-size:20px;">💬</span>`;
+                
                 listDiv.appendChild(item);
+
+                if(db) {
+                    db.ref("users/" + username).once("value").then(snap => {
+                        if(snap.exists()) {
+                            let data = snap.val();
+                            if(data.profilePic && data.profilePic !== pic) {
+                                myFriends[username] = { name: data.displayName, pic: data.profilePic };
+                                localStorage.setItem("myFriendsList", JSON.stringify(myFriends));
+                                document.getElementById(`avatar-${username}`).innerHTML = `<img src="${data.profilePic}" style="width:100%; height:100%; object-fit:cover;">`;
+                                document.getElementById("friend-card-" + username).onclick = () => openChat(username, data.displayName, data.profilePic);
+                            }
+                        }
+                    });
+                }
             }
         }
 
+        // --- نظام الشات الخاص وظهور صورة الصديق بداخل المحادثة ---
         function getChatRoomID(user1, user2) { return [user1, user2].sort().join("_"); }
 
-        function openChat(friendUsername, friendName) {
+        function openChat(friendUsername, friendName, friendPic) {
             document.getElementById("friendsArea").style.display = "none";
             document.getElementById("privateChatArea").style.display = "flex";
             currentChatFriend = friendUsername;
             document.getElementById("chatFriendName").innerText = friendName;
-            document.getElementById("chatAvatar").innerText = friendName.charAt(0).toUpperCase();
+            
+            let avatarHTML = friendPic ? `<img src="${friendPic}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">` : friendName.charAt(0).toUpperCase();
+            document.getElementById("chatAvatar").innerHTML = avatarHTML;
             
             let chatBox = document.getElementById("chatMessages"); chatBox.innerHTML = ""; 
             let roomID = getChatRoomID(myCleanUsername, friendUsername);
@@ -346,10 +411,33 @@
             if(!db) return;
             
             chatListener = db.ref("private_chats/" + roomID).on("child_added", function(snapshot) {
-                let msg = snapshot.val(); let newMsg = document.createElement("div");
-                newMsg.className = (msg.sender === myCleanUsername) ? "message sent" : "message received";
-                newMsg.innerHTML = `<span class="msg-info">${msg.time}</span>${msg.text}`;
-                chatBox.appendChild(newMsg); chatBox.scrollTop = chatBox.scrollHeight;
+                let msg = snapshot.val(); 
+                let isMe = (msg.sender === myCleanUsername);
+                
+                let newMsg = document.createElement("div");
+                
+                if (isMe) {
+                    // رسائلك تظهر على اليمين كفقاعة عادية
+                    newMsg.className = "msg-wrapper sent";
+                    newMsg.innerHTML = `
+                        <div class="msg-bubble sent">
+                            <span class="msg-info">${msg.time}</span>${msg.text}
+                        </div>
+                    `;
+                } else {
+                    // رسائل صديقك تظهر على اليسار مع صورته
+                    let friendPicHTML = friendPic ? `<img src="${friendPic}" style="width:100%; height:100%; object-fit:cover;">` : friendName.charAt(0).toUpperCase();
+                    newMsg.className = "msg-wrapper received";
+                    newMsg.innerHTML = `
+                        <div class="msg-avatar">${friendPicHTML}</div>
+                        <div class="msg-bubble received">
+                            <span class="msg-info">${msg.time}</span>${msg.text}
+                        </div>
+                    `;
+                }
+                
+                chatBox.appendChild(newMsg); 
+                chatBox.scrollTop = chatBox.scrollHeight;
             });
         }
 
@@ -369,25 +457,13 @@
             let timeNow = new Date(); let timeStr = timeNow.getHours() + ":" + (timeNow.getMinutes()<10?'0':'') + timeNow.getMinutes();
             let roomID = getChatRoomID(myCleanUsername, currentChatFriend);
             
-            // إرسال الرسالة لغرفة المحادثة
             db.ref("private_chats/" + roomID).push({ sender: myCleanUsername, text: msgText, time: timeStr });
-            
-            // إرسال إشعار للمستلم بقاعدة البيانات
             db.ref("notifications/" + currentChatFriend).push({ sender: myCleanUsername, text: msgText, timeAdded: Date.now() });
             
             inputField.value = "";
         }
 
-        document.getElementById('imageUpload').addEventListener('change', function(e) {
-            if (e.target.files && e.target.files[0]) {
-                let reader = new FileReader();
-                reader.onload = function(event) {
-                    let imgData = event.target.result; document.getElementById("userProfileImage").src = imgData; localStorage.setItem("appUserPic", imgData);
-                };
-                reader.readAsDataURL(e.target.files[0]);
-            }
-        });
-
+        // --- الأنظمة الأخرى (الطقس، الصلاة، الألعاب) ---
         function getWeather() { fetchWeatherByCity("طرابلس"); if (navigator.geolocation) { navigator.geolocation.getCurrentPosition( (position) => fetchWeatherData(position.coords.latitude, position.coords.longitude), (error) => console.log("الموقع الافتراضي"), { timeout: 5000 } ); } }
         function fetchWeatherData(lat, lon) { fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&hourly=relativehumidity_2m,apparent_temperature,windspeed_10m`).then(res => res.json()).then(data => updateWeatherUI(data, "موقعك الحالي")).catch(e => {}); }
         function fetchWeatherByCity(cityName) { fetch(`https://api.open-meteo.com/v1/forecast?latitude=34.4367&longitude=35.8362&current_weather=true&hourly=relativehumidity_2m,apparent_temperature,windspeed_10m`).then(res => res.json()).then(data => updateWeatherUI(data, cityName)).catch(e => {}); }
@@ -414,7 +490,6 @@
 
         function switchGameTab(game) { document.getElementById('xoContainer').style.display = game === 'xo' ? 'block' : 'none'; document.getElementById('snakeContainer').style.display = game === 'snake' ? 'block' : 'none'; document.getElementById('btnTicTacToe').style.background = game === 'xo' ? 'var(--neon-green)' : 'var(--bg-card)'; document.getElementById('btnTicTacToe').style.color = game === 'xo' ? '#000' : 'var(--text-light)'; document.getElementById('btnSnakeGame').style.background = game === 'snake' ? 'var(--neon-green)' : 'var(--bg-card)'; document.getElementById('btnSnakeGame').style.color = game === 'snake' ? '#000' : 'var(--text-light)'; }
         
-        // صلاحيات الإشعار
         function requestNotificationPermission() { if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") Notification.requestPermission(); }
         
         let alarmAudio = document.getElementById("alarmSound"), adhanAudio = document.getElementById("adhanAudio");
